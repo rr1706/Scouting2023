@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/rrlogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/rrlogo" />
+
+    <TableLayout
+        android:layout_width="900dp"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rrlogo"
+        app:layout_constraintVertical_bias="0.110000014">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:id="@+id/cone0"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cube0"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcube" />
+
+            <ImageView
+                android:id="@+id/cone1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cone2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cube1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcube" />
+
+            <ImageView
+                android:id="@+id/cone3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cone4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cube2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcube" />
+
+            <ImageView
+                android:id="@+id/cone5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <ImageView
+                android:id="@+id/cone6"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cube3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcube" />
+
+            <ImageView
+                android:id="@+id/cone7"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cone8"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cube4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcube" />
+
+            <ImageView
+                android:id="@+id/cone9"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cone10"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+
+            <ImageView
+                android:id="@+id/cube5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcube" />
+
+            <ImageView
+                android:id="@+id/cone11"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redcone" />
+        </TableRow>
+
+        <TableRow>
+
+            <ImageView
+                android:id="@+id/both0"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both6"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both7"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+
+            <ImageView
+                android:id="@+id/both8"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/redboth" />
+        </TableRow>
+
+    </TableLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
