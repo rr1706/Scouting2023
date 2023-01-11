@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="endgameEngage">
+        <item>No Input</item>
+        <item>NONE</item>
+        <item>PARKED</item>
+        <item>DOCKED</item>
+        <item>DOCKED &amp; ENGAGED</item>
+    </string-array>
+</resources>
