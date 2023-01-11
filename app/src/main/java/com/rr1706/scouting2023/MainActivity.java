@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -19,13 +23,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -65,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout Background,Pregame;
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -75,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         robotError = findViewById(R.id.robotError);
         submit = findViewById(R.id.submit);
@@ -102,10 +111,7 @@ public class MainActivity extends AppCompatActivity {
         Pregame = findViewById(R.id.Pregame);
         rrlogo = findViewById(R.id.rrlogo);
         Gray_Box.setBackgroundColor(Color.argb(200, 240, 240, 240));
-
-
         round_input.setText(String.valueOf(roundfill));
-
         Drawable textBackground = round_input.getBackground();
         Drawable nameBackground = name_input.getBackground();
         Drawable spinnerbackground = AutoEngage.getBackground();
@@ -136,17 +142,70 @@ public class MainActivity extends AppCompatActivity {
         both6 = findViewById(R.id.both6);
         both7 = findViewById(R.id.both7);
         both8 = findViewById(R.id.both8);
+        ImageView[][] imArray = {{cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5},{cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11},{both0,both1,both2,both3,both4,both5,both6,both7,both8}};
 
+
+        if (getTeams() != "") {
+            teamAutofill.setChecked(true);
+        }
+
+        String[] splitstrArray = null;
+        String[] strArray = null;
+        strArray = getTeams().split("\n");
+        splitstrArray = strArray[roundfill - 1].split(",");
+
+        tabletName = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
+        if (tabletName.equals("1706's 1st Fire")) {
+            tabletnumber = 4;
+        } else if (tabletName.equals("1706's 2nd Fire")) {
+            tabletnumber = 5;
+        } else if (tabletName.equals("1706's 3rd Fire")) {
+            tabletnumber = 6;
+        } else if (tabletName.equals("1706's 4th Fire")) {
+            tabletnumber = 1;
+        } else if (tabletName.equals("1706's 7th Fire")) {
+            tabletnumber = 2;
+        } else if (tabletName.equals("1706's 6th Fire")) {
+            tabletnumber = 3;
+        }
+
+        int tabletnumbercomp = tabletnumber - 1;
+
+        if (tabletnumber <= 3) {
+            Red_Alliance.performClick();
+        } else {
+            Blue_Alliance.performClick();
+        }
+
+        //Change From Auto To Teleop - Needs to disable the clicked ones in Auto when transitioning - Needs to reenable disabled if switch back to auto
         AutoChange.setOnClickListener(v->{
             if(mode.equals("auto")) {
                 mode = "teleop";
                 AutoChange.setText("TELEOP");
+                for(int i=0; i < grid.length; i++){
+                    Log.e(String.valueOf(i), Arrays.toString(grid[i]));
+                    for(int j=0; j<grid[i].length; j++) {
+                        if(grid[i][j] == 1) {
+                            imArray[i][j].setEnabled(false);
+                        }
+
+                    }
+                }
+
             } else {
                 mode = "auto";
                 AutoChange.setText("AUTO");
+                for(int i=0; i < grid.length; i++){
+                    Log.e(String.valueOf(i), Arrays.toString(grid[i]));
+                    for(int j=0; j<grid[i].length; j++) {
+                        if(!imArray[i][j].isEnabled()) {
+                            imArray[i][j].setEnabled(true);
+                        }
+
+                    }
+                }
             }
         });
-
 
 
 
@@ -252,87 +311,119 @@ public class MainActivity extends AppCompatActivity {
         myThread.start();
 
 
-        both0.setOnClickListener(v->{
-            arrayUpdate(2,0,R.id.both0);
-        });
-        both1.setOnClickListener(v->{
-            arrayUpdate(2,1,R.id.both1);
-        });
-        both2.setOnClickListener(v->{
-            arrayUpdate(2,2,R.id.both2);
-        });
-        both3.setOnClickListener(v->{
-            arrayUpdate(2,3,R.id.both3);
-        });
-        both4.setOnClickListener(v->{
-            arrayUpdate(2,4,R.id.both4);
-        });
-        both5.setOnClickListener(v->{
-            arrayUpdate(2,5,R.id.both5);
-        });
-        both6.setOnClickListener(v->{
-            arrayUpdate(2,6,R.id.both6);
-        });
-        both7.setOnClickListener(v->{
-            arrayUpdate(2,7,R.id.both7);
-        });
-        both8.setOnClickListener(v->{
-            arrayUpdate(2,8,R.id.both8);
-        });
-        cube0.setOnClickListener(v->{
-            arrayUpdate(0,1,R.id.cube0);
-        });
-        cube1.setOnClickListener(v->{
-            arrayUpdate(0,4,R.id.cube1);
-        });
-        cube2.setOnClickListener(v->{
-            arrayUpdate(0,7,R.id.cube2);
-        });
-        cube3.setOnClickListener(v->{
-            arrayUpdate(1,1,R.id.cube3);
-        });
-        cube4.setOnClickListener(v->{
-            arrayUpdate(1,4,R.id.cube4);
-        });
-        cube5.setOnClickListener(v->{
-            arrayUpdate(1,7,R.id.cube5);
-        });
-        cone0.setOnClickListener(v->{
-            arrayUpdate(0,0,R.id.cone0);
-        });
-        cone1.setOnClickListener(v->{
-            arrayUpdate(0,2,R.id.cone1);
-        });
-        cone2.setOnClickListener(v->{
-            arrayUpdate(0,3,R.id.cone2);
-        });
-        cone3.setOnClickListener(v->{
-            arrayUpdate(0,5,R.id.cone3);
-        });
-        cone4.setOnClickListener(v->{
-            arrayUpdate(0,6,R.id.cone4);
-        });
-        cone5.setOnClickListener(v->{
-            arrayUpdate(0,8,R.id.cone5);
-        });
+        both0.setOnClickListener(v-> arrayUpdate(2,0,R.id.both0));
+        both1.setOnClickListener(v-> arrayUpdate(2,1,R.id.both1));
+        both2.setOnClickListener(v-> arrayUpdate(2,2,R.id.both2));
+        both3.setOnClickListener(v-> arrayUpdate(2,3,R.id.both3));
+        both4.setOnClickListener(v-> arrayUpdate(2,4,R.id.both4));
+        both5.setOnClickListener(v-> arrayUpdate(2,5,R.id.both5));
+        both6.setOnClickListener(v-> arrayUpdate(2,6,R.id.both6));
+        both7.setOnClickListener(v-> arrayUpdate(2,7,R.id.both7));
+        both8.setOnClickListener(v-> arrayUpdate(2,8,R.id.both8));
+        cube0.setOnClickListener(v-> arrayUpdate(0,1,R.id.cube0));
+        cube1.setOnClickListener(v-> arrayUpdate(0,4,R.id.cube1));
+        cube2.setOnClickListener(v-> arrayUpdate(0,7,R.id.cube2));
+        cube3.setOnClickListener(v-> arrayUpdate(1,1,R.id.cube3));
+        cube4.setOnClickListener(v-> arrayUpdate(1,4,R.id.cube4));
+        cube5.setOnClickListener(v-> arrayUpdate(1,7,R.id.cube5));
+        cone0.setOnClickListener(v-> arrayUpdate(0,0,R.id.cone0));
+        cone1.setOnClickListener(v-> arrayUpdate(0,2,R.id.cone1));
+        cone2.setOnClickListener(v-> arrayUpdate(0,3,R.id.cone2));
+        cone3.setOnClickListener(v-> arrayUpdate(0,5,R.id.cone3));
+        cone4.setOnClickListener(v-> arrayUpdate(0,6,R.id.cone4));
+        cone5.setOnClickListener(v-> arrayUpdate(0,8,R.id.cone5));
+        cone6.setOnClickListener(v-> arrayUpdate(1,0,R.id.cone6));
+        cone7.setOnClickListener(v-> arrayUpdate(1,2,R.id.cone7));
+        cone8.setOnClickListener(v-> arrayUpdate(1,3,R.id.cone8));
+        cone9.setOnClickListener(v-> arrayUpdate(1,5,R.id.cone9));
+        cone10.setOnClickListener(v-> arrayUpdate(1,6,R.id.cone10));
+        cone11.setOnClickListener(v-> arrayUpdate(1,8,R.id.cone11));
 
-        cone6.setOnClickListener(v->{
-            arrayUpdate(1,0,R.id.cone6);
-        });
-        cone7.setOnClickListener(v->{
-            arrayUpdate(1,2,R.id.cone7);
-        });
-        cone8.setOnClickListener(v->{
-            arrayUpdate(1,3,R.id.cone8);
-        });
-        cone9.setOnClickListener(v->{
-            arrayUpdate(1,5,R.id.cone9);
-        });
-        cone10.setOnClickListener(v->{
-            arrayUpdate(1,6,R.id.cone10);
-        });
-        cone11.setOnClickListener(v->{
-            arrayUpdate(1,8,R.id.cone11);
+        final DialogInterface.OnClickListener NoShowDialog = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: //If the yes button is clicked for no show, this executes
+                    SimpleDateFormat time = new SimpleDateFormat("dd-HHmmss", Locale.getDefault());
+                    File dir = getDataDirectory();
+                    try {
+                        File myFile = new File(dir, team_input.getText().toString() + "_" + round_input.getText().toString() + "_" + time.format(new Date()) + ".txt");
+                        FileOutputStream fOut = new FileOutputStream(myFile, true);
+                        PrintWriter myOutWriter = new PrintWriter(new OutputStreamWriter(fOut));
+                        myOutWriter.println("Scouter: " + name_input.getText().toString());
+                        myOutWriter.println("Team: " + team_input.getText().toString());
+                        myOutWriter.println("Timestamp: " + time.format(new Date()));
+                        myOutWriter.println("Match: " + round_input.getText().toString());
+                        myOutWriter.flush();
+                        myOutWriter.close();
+                        fOut.close();
+                        Toast.makeText(getApplicationContext(), "Data Submitted!", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(getApplicationContext(), "Data Submission Failed! (Tell scouting)", Toast.LENGTH_SHORT).show();
+                        Log.e("Exception", "File write failed: " + e);
+                        data_submitted.setImageResource(R.drawable.x);
+                        data_submitted.setVisibility(View.VISIBLE);
+                    }
+                    allianceText.setBackgroundColor(Color.TRANSPARENT);
+                    round_input.setBackground(textBackground);
+                    team_input.setBackground(textBackground);
+                    name_input.setBackground(nameBackground);
+                    if (ds_cooldown == 0) {
+                        data_submitted.setImageResource(R.drawable.check);
+                        data_submitted.setVisibility(View.VISIBLE);
+                    }
+                    resetVars();
+
+                    /* if (teamAutofill.isChecked() && getTeams() != "") {
+                        String[] tempIntArr = null;
+                        String[] splittempIntArr = null;
+                        tempIntArr = getTeams().split("\n");
+                        roundfill = Integer.parseInt(round_input.getText().toString());
+                        try {
+                            splittempIntArr = tempIntArr[roundfill - 1].split(",");
+                            team_input.setText(splittempIntArr[tabletnumbercomp]);
+                            dummyTeam.setText(team_input.getText());
+
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+
+                        }
+                    } */
+                    if (!teamAutofill.isChecked()) {
+                        team_input.setText("");
+                    }
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        };
+
+        noShow.setOnClickListener(v -> {
+            String submitError = "";
+            //Special handling
+            if (alliance.equals("none")) {
+                submitError += " No Alliance,";
+            }
+            if (name_input.getText().toString().equals("")) {
+                submitError += " No Name,";
+            }
+            if (team_input.getText().toString().equals("")) {
+                submitError += " No Team#,";
+            }
+            if (round_input.getText().toString().equals("")) {
+                submitError += " No Round#,";
+            }
+            if (!submitError.equals("")) {
+                submitError = submitError.substring(0, submitError.length() - 1) + ".";
+            }
+            if (!(submitError.equals(""))) {
+                Toast.makeText(getApplicationContext(), "Submit Error:" + submitError, Toast.LENGTH_LONG).show();
+                data_submitted.setVisibility(View.VISIBLE);
+                data_submitted.setImageResource(R.drawable.x);
+                ds_cooldown = 1500;
+            } else {
+                builder.setMessage("Are you sure the team is a no show?")
+                        .setPositiveButton("Yes", NoShowDialog)
+                        .setNegativeButton("No", NoShowDialog)
+                        .show();
+            }
         });
 
 
@@ -494,67 +585,84 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.close();
                     fOut.close();
                     Toast.makeText(getApplicationContext(), "Data Submitted!", Toast.LENGTH_SHORT).show();
+
                 } catch (IOException e) {
                     //If anything goes wrong, it throws an error instead of crashing
-                    Toast.makeText(getApplicationContext(), "Data Submission Failed! (Tell scouting)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Data Submission Failed! (TELL SCOUTING)", Toast.LENGTH_SHORT).show();
                     Log.e("Exception", "File write failed: " + e);
                 }
                 //Reset Everything
-                roundfill = Integer.parseInt(round_input.getText().toString());
-                roundfill++;
-                autoTop = 0;
-                autoMid = 0;
-                autoLow = 0;
-                teleTop = 0;
-                teleMid = 0;
-                teleLow = 0;
-                missedIntake = 0;
-
-                notes.setText("");
-                scouterName = name_input.getText().toString();
-                name_input.setText("");
-                round_input.setText(String.valueOf(roundfill));
-                team_input.setText("");
-                EndgameEngage.setSelection(0);
-                AutoEngage.setSelection(0);
-                AutoChange.setText("AUTO");
-                mode = "auto";
-                robotError.setChecked(false);
-                missedScore.setText("0");
-
-                Pregame.setVisibility(View.VISIBLE);
-                Gray_Box.setVisibility(View.VISIBLE);
-                notes.setVisibility(View.INVISIBLE);
-
-
-
-                if (roundfill > 1) {
-                    sameScouter.setVisibility(View.VISIBLE);
-                }
-                if (!teamAutofill.isChecked()) {
-                    team_input.setText("");
-                }
+                resetVars();
             }
         });
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
+
+    private void resetVars() {
+        roundfill = Integer.parseInt(round_input.getText().toString());
+        roundfill++;
+        autoTop = 0;
+        autoMid = 0;
+        autoLow = 0;
+        teleTop = 0;
+        teleMid = 0;
+        teleLow = 0;
+        missedIntake = 0;
+        ImageView[][] imArray = {
+                {cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5},
+                {cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11},
+                {both0,both1,both2,both3,both4,both5,both6,both7,both8}
+        };
+        for(int i=0; i < imArray.length; i++){
+            for(int j=0; j<imArray[i].length; j++) {
+                if(!imArray[i][j].isEnabled()) {
+                    imArray[i][j].setEnabled(true);
+                }
+            }
+        }
+        notes.setText("");
+        scouterName = name_input.getText().toString();
+        name_input.setText("");
+        round_input.setText(String.valueOf(roundfill));
+        team_input.setText("");
+        EndgameEngage.setSelection(0);
+        AutoEngage.setSelection(0);
+        AutoChange.setText("AUTO");
+        mode = "auto";
+        robotError.setChecked(false);
+        missedScore.setText("0");
+        Pregame.setVisibility(View.VISIBLE);
+        Gray_Box.setVisibility(View.VISIBLE);
+        notes.setVisibility(View.INVISIBLE);
+        if (roundfill > 1) {
+            sameScouter.setVisibility(View.VISIBLE);
+        }
+        if (!teamAutofill.isChecked()) {
+            team_input.setText("");
+        }
+    }
+    private String getTeams() {
+        String text = "";
+        try {
+            File documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            File file;
+            file = new File(documents + "/ScoutingTeams.txt");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text += line + "\n";
+            }
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.e("log", text);
+        return text;
+    }
+
     private void arrayUpdate(int row, int column, int id) {
         //Determine Cone Cube or Both
         ImageView image = (ImageView)findViewById(id);
@@ -651,7 +759,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {}
     private File getDataDirectory() {
-        File directory = Environment.getExternalStorageDirectory();
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         File myDir = new File(directory + "/ScoutingData");
         myDir.mkdirs();
         return myDir;
