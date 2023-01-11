@@ -440,12 +440,13 @@
             android:layout_width="203dp"
             android:layout_height="66dp"
             android:layout_marginStart="6dp"
-            android:layout_marginLeft="6dp"
             android:text="Are you the same scouter as last match?"
             android:textSize="12dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/autoFill"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name_input" />
+            app:layout_constraintTop_toBottomOf="@+id/name_input"
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

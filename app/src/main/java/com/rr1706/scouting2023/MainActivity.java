@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     int[][] grid = {{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0}};
     String alliance = "none";
     String mode = "auto";
+    String scouterName;
 
     ConstraintLayout Background,Pregame;
 
@@ -101,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
         Pregame = findViewById(R.id.Pregame);
         rrlogo = findViewById(R.id.rrlogo);
         Gray_Box.setBackgroundColor(Color.argb(200, 240, 240, 240));
+
+
+        round_input.setText(String.valueOf(roundfill));
 
         Drawable textBackground = round_input.getBackground();
         Drawable nameBackground = name_input.getBackground();
@@ -191,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 round_input.setBackground(textBackground);
                 team_input.setBackground(textBackground);
                 name_input.setBackground(nameBackground);
+                notes.setVisibility(View.VISIBLE);
             }
         });
 
@@ -373,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        /*
+
         submit.setOnClickListener(v -> {
             String submitError = "";
             SimpleDateFormat time = new SimpleDateFormat("dd-HHmmss", Locale.getDefault());
@@ -468,15 +473,19 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.println("Robot Errors: " + robotError.isChecked());
 
                     myOutWriter.println("Auto Docked: " + AutoEngage.getSelectedItem());
-                    myOutWriter.println("Auto Top: " + autoLowerScore);
-                    myOutWriter.println("Auto Middle: " + autoLowerScore);
-                    myOutWriter.println("Auto Bottom: " + autoLowerScore);
+                    myOutWriter.println("Auto Top: " + autoTop);
+                    myOutWriter.println("Auto Middle: " + autoMid);
+                    myOutWriter.println("Auto Bottom: " + autoLow);
 
-                    myOutWriter.println("Missed Intakes: " + missedScore);
+                    myOutWriter.println("Tele Top: " + teleTop);
+                    myOutWriter.println("Tele Middle: " + teleMid);
+                    myOutWriter.println("Tele Bottom: " + teleLow);
 
-                    myOutWriter.println("Top Array: " + teleopUpperScore);
-                    myOutWriter.println("Middle Array: " + teleopUpperScore);
-                    myOutWriter.println("Bottom Array: " + teleopUpperScore);
+                    myOutWriter.println("Missed Intakes: " + missedScore.getText().toString());
+
+                    myOutWriter.println("Top Array: " + Arrays.toString(grid[0]));
+                    myOutWriter.println("Middle Array: " + Arrays.toString(grid[1]));
+                    myOutWriter.println("Bottom Array: " + Arrays.toString(grid[2]));
 
                     myOutWriter.println("Endgame: " + EndgameEngage.getSelectedItem());
                     myOutWriter.println("Notes: " + notes.getText());
@@ -493,137 +502,41 @@ public class MainActivity extends AppCompatActivity {
                 //Reset Everything
                 roundfill = Integer.parseInt(round_input.getText().toString());
                 roundfill++;
-                teleopLowerScore = 0;
-                teleopUpperScore = 0;
-                autoLowerScore = 0;
-                autoUpperScore = 0;
+                autoTop = 0;
+                autoMid = 0;
+                autoLow = 0;
+                teleTop = 0;
+                teleMid = 0;
+                teleLow = 0;
                 missedIntake = 0;
-                auto_lower_text.setEnabled(true);
-                auto_upper_text.setEnabled(true);
-                auto_missed_minus.setEnabled(true);
-                auto_missed_plus.setEnabled(true);
-                auto_missed_text.setEnabled(true);
-                auto_missed_minus.setAlpha((float) 1);
-                auto_missed_plus.setAlpha((float) 1);
-                auto_missed_text.setAlpha((float) 1);
-                auto_upper_minus.setEnabled(true);
-                auto_upper_plus.setEnabled(true);
-                auto_lower_minus.setEnabled(true);
-                auto_lower_plus.setEnabled(true);
-                auto_lower_minus.setAlpha((float) 1);
-                auto_lower_plus.setAlpha((float) 1);
-                auto_lower_text.setAlpha((float) 1);
-                auto_upper_minus.setAlpha((float) 1);
-                auto_upper_plus.setAlpha((float) 1);
-                auto_upper_text.setAlpha((float) 1);
-                toptext.setAlpha((float) 1);
-                auto_upper_minus.setEnabled(true);
-                auto_upper_minus.setAlpha((float) 1);
-                auto_upper_plus.setEnabled(true);
-                auto_upper_plus.setAlpha((float) 1);
-                attemptedAutoText.setAlpha((float) 1);
-                bottomtext.setAlpha((float) 1);
+
                 notes.setText("");
                 scouterName = name_input.getText().toString();
-                auto_no_autoColor.setBackgroundColor(Color.TRANSPARENT);
                 name_input.setText("");
                 round_input.setText(String.valueOf(roundfill));
                 team_input.setText("");
-                endgame_results.setSelection(0);
-                climbResult.setSelection(0);
-                auto_no_auto.setChecked(false);
+                EndgameEngage.setSelection(0);
+                AutoEngage.setSelection(0);
+                AutoChange.setText("AUTO");
+                mode = "auto";
                 robotError.setChecked(false);
-                teleop_upper_text.setText("0");
-                teleop_lower_text.setText("0");
-                auto_upper_text.setText("0");
-                auto_lower_text.setText("0");
-                missedShotsText.setText("0");
-                defenseTimer.setText("00:00.00");
-                climbTimer.setText("00:00.00");
-                playedDefense.setChecked(false);
-                defensetimer = 0;
-                climbtimer = 0;
-                startDefenseTimer.setEnabled(false);
-                startDefenseTimer.setAlpha((float) 0.5);
-                defended1.setEnabled(false);
-                defended1.setAlpha((float) 0.5);
-                defended2.setEnabled(false);
-                defended2.setAlpha((float) 0.5);
-                defended3.setEnabled(false);
-                defended3.setAlpha((float) 0.5);
-                DefenseNumber.setEnabled(false);
-                DefenseNumber.setAlpha((float) 0.5);
-                defenseLowerScore = 0;
-                defenseUpperScore = 0;
-                Defense.setVisibility(View.INVISIBLE);
-                startDefenseTimer.setText("Start Timer");
-                climbTimerStart.setText("Start Timer");
-                autoMissedScore = 0;
-                auto_missed_text.setText("0");
-                climbtimerreset = 0;
-                timerReset = 0;
-                milisecondsclimbraw = 0;
-                milisecondsclimb = 0;
-                milisecondsdefendingraw = 0;
-                milisecondsdefending = 0;
-                secondsclimb = 0;
-                secondsdefending = 0;
-                minutesclimb = 0;
-                minutesdefending = 0;
+                missedScore.setText("0");
 
-                defended1.setChecked(false);
-                defended2.setChecked(false);
-                defended3.setChecked(false);
-                DefenseNumber.setText("");
-                Endgame.setVisibility(View.INVISIBLE);
                 Pregame.setVisibility(View.VISIBLE);
-                startDefenseTimer.setEnabled(false);
-                startDefenseTimer.setAlpha((float) 0.5);
+                Gray_Box.setVisibility(View.VISIBLE);
+                notes.setVisibility(View.INVISIBLE);
+
+
+
                 if (roundfill > 1) {
                     sameScouter.setVisibility(View.VISIBLE);
-                }
-                String[] tempIntArr1 = null;
-                String[] splittempIntArr1 = null;
-                if (getTeams() != "") {
-                    tempIntArr1 = getTeams().split("\n");
-                    roundfill = Integer.parseInt(round_input.getText().toString());
-                    try {
-                        splittempIntArr1 = tempIntArr1[roundfill - 1].split(",");
-
-                        if (tabletnumber >= 4) {
-                            defended1.setText(splittempIntArr1[0]);
-                            defended2.setText(splittempIntArr1[1]);
-                            defended3.setText(splittempIntArr1[2]);
-                        } else if (tabletnumber <= 3) {
-                            defended1.setText(splittempIntArr1[3]);
-                            defended2.setText(splittempIntArr1[4]);
-                            defended3.setText(splittempIntArr1[5]);
-                        }
-
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (teamAutofill.isChecked() && getTeams() != "") {
-                    String[] tempIntArr = null;
-                    String[] splittempIntArr = null;
-                    tempIntArr = getTeams().split("\n");
-                    roundfill = Integer.parseInt(round_input.getText().toString());
-                    try {
-                        splittempIntArr = tempIntArr[roundfill - 1].split(",");
-                        team_input.setText(splittempIntArr[tabletnumbercomp]);
-                        dummyTeam.setText(team_input.getText());
-
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        e.printStackTrace();
-                    }
                 }
                 if (!teamAutofill.isChecked()) {
                     team_input.setText("");
                 }
             }
         });
-        */
+
 
 
 
