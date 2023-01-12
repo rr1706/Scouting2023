@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner AutoEngage,EndgameEngage;
     Button PregameBtn,AutoChange,pregame_close,noShow,Red_Alliance,Blue_Alliance,sameScouter,submit,Gray_Box;
     CheckBox teamAutofill;
-    TextView allianceText,missedScore;
+    TextView allianceText,missedScore,dummyTeam;
     Switch robotError;
 
     int teleTop;
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+        dummyTeam = findViewById(R.id.dummyTeam);
         robotError = findViewById(R.id.robotError);
         submit = findViewById(R.id.submit);
         missedScore = findViewById(R.id.missedScore);
@@ -171,11 +171,6 @@ public class MainActivity extends AppCompatActivity {
 
         int tabletnumbercomp = tabletnumber - 1;
 
-        if (tabletnumber <= 3) {
-            Red_Alliance.performClick();
-        } else {
-            Blue_Alliance.performClick();
-        }
 
         //Change From Auto To Teleop - Needs to disable the clicked ones in Auto when transitioning - Needs to reenable disabled if switch back to auto
         AutoChange.setOnClickListener(v->{
@@ -371,22 +366,8 @@ public class MainActivity extends AppCompatActivity {
                         data_submitted.setVisibility(View.VISIBLE);
                     }
                     resetVars();
+                    teamAuto();
 
-                    /* if (teamAutofill.isChecked() && getTeams() != "") {
-                        String[] tempIntArr = null;
-                        String[] splittempIntArr = null;
-                        tempIntArr = getTeams().split("\n");
-                        roundfill = Integer.parseInt(round_input.getText().toString());
-                        try {
-                            splittempIntArr = tempIntArr[roundfill - 1].split(",");
-                            team_input.setText(splittempIntArr[tabletnumbercomp]);
-                            dummyTeam.setText(team_input.getText());
-
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            e.printStackTrace();
-
-                        }
-                    } */
                     if (!teamAutofill.isChecked()) {
                         team_input.setText("");
                     }
@@ -394,6 +375,27 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         };
+
+        teamAuto();
+
+        if (team_input.getText().toString().equals("1706")) {
+            rrlogo.animate().rotation(2880f).setDuration(5000).start();
+        }
+        teamAutofill.setOnClickListener(v -> {
+            teamAuto();
+
+            if (team_input.getText().toString().equals("1706")) {
+                    rrlogo.animate().rotation(2880f).setDuration(5000).start();
+                }
+            if (!teamAutofill.isChecked()) {
+                team_input.setText("");
+            }
+        });
+
+        sameScouter.setOnClickListener(v -> {
+            name_input.setText(scouterName);
+        });
+
 
         noShow.setOnClickListener(v -> {
             String submitError = "";
@@ -468,6 +470,55 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
+        name_input.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
+
+        round_input.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && getTeams() != "") {
+                String[] tempIntArr = null;
+                String[] splittempIntArr = null;
+                tempIntArr = getTeams().split("\n");
+
+                if (round_input.getText().toString().equals("")) {
+                    round_input.setText("1");
+                } else {
+                    roundfill = Integer.parseInt(round_input.getText().toString());
+                }
+                try {
+                    splittempIntArr = tempIntArr[roundfill - 1].split(",");
+                    hideKeyboard(v);
+                    if (teamAutofill.isChecked()) {
+                        team_input.setText(splittempIntArr[tabletnumbercomp]);
+                        dummyTeam.setText(team_input.getText());
+
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                    hideKeyboard(v);
+
+                }
+
+            }
+        });
+
+
+
+
+
+        team_input.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+                dummyTeam.setText(team_input.getText());
+
+            }
+            if (team_input.getText().toString().equals("1706")) {
+                rrlogo.animate().rotation(2880f).setDuration(5000).start();
+            }
+        });
 
 
         submit.setOnClickListener(v -> {
@@ -593,11 +644,38 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //Reset Everything
                 resetVars();
+
+                teamAuto();
             }
         });
 
+        if (tabletnumber <= 3) {
+            Red_Alliance.performClick();
+        } else {
+            Blue_Alliance.performClick();
+        }
 
 
+
+    }
+
+    private void teamAuto() {
+
+        if (teamAutofill.isChecked() && getTeams() != "") {
+            int tabletnumbercomp = tabletnumber - 1;
+            String[] tempIntArr = null;
+            String[] splittempIntArr = null;
+            tempIntArr = getTeams().split("\n");
+            roundfill = Integer.parseInt(round_input.getText().toString());
+            try {
+                splittempIntArr = tempIntArr[roundfill - 1].split(",");
+                team_input.setText(splittempIntArr[tabletnumbercomp]);
+                dummyTeam.setText(team_input.getText());
+
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void resetVars() {
@@ -643,7 +721,9 @@ public class MainActivity extends AppCompatActivity {
             team_input.setText("");
         }
     }
+
     private String getTeams() {
+
         String text = "";
         try {
             File documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
