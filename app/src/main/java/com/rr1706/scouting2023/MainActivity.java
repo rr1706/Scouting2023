@@ -1,9 +1,13 @@
 package com.rr1706.scouting2023;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -144,29 +149,35 @@ public class MainActivity extends AppCompatActivity {
         both8 = findViewById(R.id.both8);
         ImageView[][] imArray = {{cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5},{cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11},{both0,both1,both2,both3,both4,both5,both6,both7,both8}};
 
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                0);
 
-        if (getTeams() != "") {
+        if (!Objects.equals(getTeams(), "")) {
             teamAutofill.setChecked(true);
         }
 
-        String[] splitstrArray = null;
-        String[] strArray = null;
-        strArray = getTeams().split("\n");
-        splitstrArray = strArray[roundfill - 1].split(",");
-
         tabletName = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
-        if (tabletName.equals("1706's 1st Fire")) {
-            tabletnumber = 4;
-        } else if (tabletName.equals("1706's 2nd Fire")) {
-            tabletnumber = 5;
-        } else if (tabletName.equals("1706's 3rd Fire")) {
-            tabletnumber = 6;
-        } else if (tabletName.equals("1706's 4th Fire")) {
-            tabletnumber = 1;
-        } else if (tabletName.equals("1706's 7th Fire")) {
-            tabletnumber = 2;
-        } else if (tabletName.equals("1706's 6th Fire")) {
-            tabletnumber = 3;
+
+        switch (tabletName) {
+            case "1706's 1st Fire":
+                tabletnumber = 4;
+                break;
+            case "1706's 2nd Fire":
+                tabletnumber = 5;
+                break;
+            case "1706's 3rd Fire":
+                tabletnumber = 6;
+                break;
+            case "1706's 5th Fire":
+                tabletnumber = 1;
+                break;
+            case "1706's 6th Fire":
+                tabletnumber = 2;
+                break;
+            case "1706's 7th Fire":
+                tabletnumber = 3;
+                break;
         }
 
         int tabletnumbercomp = tabletnumber - 1;
@@ -176,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         AutoChange.setOnClickListener(v->{
             if(mode.equals("auto")) {
                 mode = "teleop";
+                submit.setVisibility(View.VISIBLE);
                 AutoChange.setText("TELEOP");
                 for(int i=0; i < grid.length; i++){
                     Log.e(String.valueOf(i), Arrays.toString(grid[i]));
@@ -190,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 mode = "auto";
                 AutoChange.setText("AUTO");
+                submit.setVisibility(View.INVISIBLE);
                 for(int i=0; i < grid.length; i++){
                     Log.e(String.valueOf(i), Arrays.toString(grid[i]));
                     for(int j=0; j<grid[i].length; j++) {
@@ -199,6 +212,13 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
+            }
+        });
+
+
+        notes.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
             }
         });
 
@@ -392,9 +412,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        sameScouter.setOnClickListener(v -> {
-            name_input.setText(scouterName);
-        });
+        sameScouter.setOnClickListener(v -> name_input.setText(scouterName));
 
 
         noShow.setOnClickListener(v -> {
@@ -461,6 +479,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Pregame.setVisibility(android.view.View.INVISIBLE);
                     Gray_Box.setVisibility(android.view.View.INVISIBLE);
+                    notes.setVisibility(View.VISIBLE);
                     allianceText.setBackgroundColor(Color.TRANSPARENT);
                     round_input.setBackground(textBackground);
                     team_input.setBackground(textBackground);
@@ -478,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         round_input.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus && getTeams() != "") {
+            if (!hasFocus && !Objects.equals(getTeams(), "")) {
                 String[] tempIntArr = null;
                 String[] splittempIntArr = null;
                 tempIntArr = getTeams().split("\n");
@@ -554,12 +573,12 @@ public class MainActivity extends AppCompatActivity {
                 Pregame.setVisibility(View.VISIBLE);
             }
             if (AutoEngage.getSelectedItem().toString().equals("No Input")) {
-                submitError += " No Results,";
+                submitError += " No Auto Choice,";
                 AutoEngage.setBackgroundColor(Color.argb(255, 255, 255, 0));
                 Pregame.setVisibility(View.INVISIBLE);
             }
             if (EndgameEngage.getSelectedItem().toString().equals("No Input")) {
-                submitError += " No Climb Result,";
+                submitError += " No Endgame Choice,";
                 EndgameEngage.setBackgroundColor(Color.argb(255, 255, 255, 0));
                 Pregame.setVisibility(View.INVISIBLE);
             }
@@ -644,6 +663,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //Reset Everything
                 resetVars();
+                AutoEngage.setBackgroundColor(Color.WHITE);
+                EndgameEngage.setBackgroundColor(Color.WHITE);
 
                 teamAuto();
             }
@@ -661,7 +682,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void teamAuto() {
 
-        if (teamAutofill.isChecked() && getTeams() != "") {
+        if (teamAutofill.isChecked() && !Objects.equals(getTeams(), "")) {
             int tabletnumbercomp = tabletnumber - 1;
             String[] tempIntArr = null;
             String[] splittempIntArr = null;
@@ -685,6 +706,9 @@ public class MainActivity extends AppCompatActivity {
         autoMid = 0;
         autoLow = 0;
         teleTop = 0;
+        for (int[] ints : grid) {
+            Arrays.fill(ints, 0);
+        }
         teleMid = 0;
         teleLow = 0;
         missedIntake = 0;
@@ -693,11 +717,25 @@ public class MainActivity extends AppCompatActivity {
                 {cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11},
                 {both0,both1,both2,both3,both4,both5,both6,both7,both8}
         };
+
+
         for(int i=0; i < imArray.length; i++){
             for(int j=0; j<imArray[i].length; j++) {
                 if(!imArray[i][j].isEnabled()) {
+                    Log.e(String.valueOf(i),String.valueOf(j));
                     imArray[i][j].setEnabled(true);
                 }
+
+                List<Integer> coneCol = Arrays.asList(0,2,3,5,6,8);
+
+                if(coneCol.contains(j) && i < 2) {
+                    imArray[i][j].setImageResource(R.drawable.redcone);
+                } else if (!coneCol.contains(j) && i < 2){
+                    imArray[i][j].setImageResource(R.drawable.redcube);
+                } else if(i==2) {
+                    imArray[2][j].setImageResource(R.drawable.redboth);
+                }
+
             }
         }
         notes.setText("");
@@ -708,6 +746,7 @@ public class MainActivity extends AppCompatActivity {
         EndgameEngage.setSelection(0);
         AutoEngage.setSelection(0);
         AutoChange.setText("AUTO");
+        submit.setVisibility(View.INVISIBLE);
         mode = "auto";
         robotError.setChecked(false);
         missedScore.setText("0");
@@ -724,7 +763,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String getTeams() {
 
-        String text = "";
+        StringBuilder text = new StringBuilder();
         try {
             File documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
             File file;
@@ -732,15 +771,15 @@ public class MainActivity extends AppCompatActivity {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
             while ((line = br.readLine()) != null) {
-                text += line + "\n";
+                text.append(line).append("\n");
             }
             br.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e("log", text);
-        return text;
+        Log.e("log", text.toString());
+        return text.toString();
     }
 
     private void arrayUpdate(int row, int column, int id) {

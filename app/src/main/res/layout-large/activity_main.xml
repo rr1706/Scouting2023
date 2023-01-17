@@ -8,11 +8,36 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/autoHint2"
+        android:layout_width="204dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="6dp"
+        android:text="Auto Station"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toTopOf="@+id/autoSpinner"
+        app:layout_constraintStart_toEndOf="@+id/rrlogo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.142" />
+
+    <TextView
+        android:id="@+id/autoHint3"
+        android:layout_width="194dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="28dp"
+        android:text="Endgame Station"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/endgameSpinner"
+        app:layout_constraintStart_toEndOf="@+id/robotError"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <TextView
         android:id="@+id/dummyTeam"
         android:layout_width="143dp"
         android:layout_height="40dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="72dp"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/notes"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
@@ -21,8 +46,8 @@
         android:id="@+id/rrlogo"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="188dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/rrlogo" />
@@ -216,19 +241,19 @@
         android:id="@+id/autoChange"
         android:layout_width="290dp"
         android:layout_height="76dp"
-        android:layout_marginTop="128dp"
-        android:layout_marginEnd="480dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="48dp"
         android:text="AUTO"
         android:textSize="48sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/autoSpinner"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/autoSpinner"
         android:layout_width="200dp"
         android:layout_height="55dp"
-        android:layout_marginStart="296dp"
-        android:layout_marginTop="152dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="48dp"
         android:background="@color/white"
         android:entries="@array/autoEngage"
         android:popupBackground="@color/white"
@@ -241,7 +266,7 @@
         android:layout_width="200dp"
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:background="@color/white"
         android:entries="@array/endgameEngage"
         android:popupBackground="@color/white"
@@ -253,7 +278,8 @@
         android:id="@+id/robotError"
         android:layout_width="144dp"
         android:layout_height="29dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
         android:text="Robot Errors"
         app:layout_constraintStart_toEndOf="@+id/notes"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
@@ -262,30 +288,18 @@
         android:id="@+id/btnPlus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginStart="164dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintStart_toEndOf="@+id/autoChange"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/plus" />
-
-    <TextView
-        android:id="@+id/missedIntakeTXTV"
-        android:layout_width="150dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="296dp"
-        android:text="Missed Intakes"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/btnMinus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintStart_toEndOf="@+id/autoChange"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/minus" />
@@ -294,26 +308,39 @@
         android:id="@+id/missedScore"
         android:layout_width="0dp"
         android:layout_height="30dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="36dp"
         android:gravity="center"
         android:text="0"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/btnPlus"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/btnMinus"
         app:layout_constraintTop_toBottomOf="@+id/missedIntakeTXTV" />
+
+    <TextView
+        android:id="@+id/missedIntakeTXTV"
+        android:layout_width="150dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="156dp"
+        android:text="Missed Intakes"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/notes"
         android:layout_width="194dp"
         android:layout_height="76dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="Notes"
         android:inputType="textLongMessage|text"
-        android:visibility="gone"
+        android:maxLength="100"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/pregameBtn"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout"
         tools:visibility="visible" />
@@ -479,8 +506,8 @@
         android:id="@+id/pregameBtn"
         android:layout_width="174dp"
         android:layout_height="73dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="34dp"
         android:elevation="10dp"
         android:text="PREGAME"
         android:textSize="24sp"
@@ -503,9 +530,12 @@
         android:layout_width="122dp"
         android:layout_height="65dp"
         android:layout_marginStart="12dp"
+        android:layout_marginTop="42dp"
         android:text="Submit"
         android:textSize="20sp"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/endgameSpinner"
-        tools:layout_editor_absoluteY="570dp" />
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
