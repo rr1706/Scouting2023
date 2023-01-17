@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/robotics/StudioProjects/Scouting2023/app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="..\:/Users/robotics/StudioProjects/Scouting2023/app/src/main/res/layout-large/activity_main.xml" value="0.5" />
+        <entry key="..\:/Users/robotics/StudioProjects/Scouting2023/app/src/main/res/layout-normal/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/robotics/StudioProjects/Scouting2023/app/src/main/res/layout/activity_main.xml" value="0.14" />
       </map>
     </option>
   </component>
