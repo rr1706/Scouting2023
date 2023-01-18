@@ -4,6 +4,6 @@
         <item>No Input</item>
         <item>NONE</item>
         <item>DOCKED</item>
-        <item>DOCKED &amp; ENGAGED</item>
+        <item>ENGAGED</item>
     </string-array>
 </resources>
