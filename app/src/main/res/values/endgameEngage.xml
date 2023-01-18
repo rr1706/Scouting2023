@@ -5,6 +5,6 @@
         <item>NONE</item>
         <item>PARKED</item>
         <item>DOCKED</item>
-        <item>DOCKED &amp; ENGAGED</item>
+        <item>ENGAGED</item>
     </string-array>
 </resources>
