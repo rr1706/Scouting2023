@@ -4,15 +4,202 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/rrlogo"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/rrlogo" />
+
+    <EditText
+        android:id="@+id/round_input"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Match#"
+        android:inputType="number"
+        android:maxLength="3"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"
+        app:layout_constraintStart_toEndOf="@+id/name_input"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:background="#EFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/name_input"
+        app:layout_constraintStart_toStartOf="@+id/name_input"
+        app:layout_constraintTop_toBottomOf="@+id/name_input" />
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:background="#EFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/round_input"
+        app:layout_constraintStart_toStartOf="@+id/round_input"
+        app:layout_constraintTop_toBottomOf="@+id/round_input" />
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:background="#EFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/alliance_input"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/alliance_input"
+        app:layout_constraintTop_toBottomOf="@+id/alliance_input" />
+
+    <EditText
+        android:id="@+id/name_input"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Scouter Name"
+        android:inputType="textEmailAddress"
+        android:maxLength="15"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"
+        app:layout_constraintStart_toEndOf="@+id/rrlogo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/alliance_input"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray"
+        android:entries="@array/alliances"
+        android:popupBackground="@color/gray"
+        app:layout_constraintStart_toEndOf="@+id/rrlogo"
+        app:layout_constraintTop_toBottomOf="@+id/name_input" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="180dp"
+        android:layout_height="307dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rrlogo" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="215dp"
+        android:layout_height="88dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="Submit"
+        android:textSize="38sp"
+        app:backgroundTint="@color/design_default_color_secondary_variant"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:id="@+id/driverTxt"
+        android:layout_width="181dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="11dp"
+        android:text="Driver Ability Rank"
+        android:textColor="@color/white"
+        android:textSize="22dp"
+        app:layout_constraintEnd_toEndOf="@+id/recyclerView"
+        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintStart_toStartOf="@+id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/rrlogo" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/inputTeamsConst"
+        android:layout_width="398dp"
+        android:layout_height="428dp"
+        android:background="#5C5C5C"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <Button
+            android:id="@+id/pregame_close"
+            android:layout_width="186dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="104dp"
+            android:layout_marginBottom="28dp"
+            android:text="Continue"
+            android:textSize="20sp"
+            app:backgroundTint="#393939"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/team1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="96dp"
+            android:ems="10"
+            android:hint="Team 1"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/team3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="244dp"
+            android:ems="10"
+            android:hint="Team 3"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/team2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="168dp"
+            android:ems="10"
+            android:hint="Team 2"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/inputTeamsTxt"
+            android:layout_width="199dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="Input Teams"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/team1"
+            app:layout_constraintStart_toStartOf="@+id/team1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
