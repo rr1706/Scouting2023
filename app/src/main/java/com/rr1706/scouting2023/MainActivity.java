@@ -2,8 +2,6 @@ package com.rr1706.scouting2023;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
@@ -27,7 +25,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -53,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner AutoEngage,EndgameEngage;
     Button PregameBtn,AutoChange,pregame_close,noShow,Red_Alliance,Blue_Alliance,sameScouter,submit,Gray_Box;
     CheckBox teamAutofill;
-    TextView allianceText,missedScore,dummyTeam;
+    TextView allianceText,missedScore,dummyTeam,endgameHide;
     Switch robotError;
 
     int teleTop;
@@ -106,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         EndgameEngage = findViewById(R.id.endgameSpinner);
         Gray_Box = findViewById(R.id.Gray_Box);
         PregameBtn= findViewById(R.id.pregameBtn);
+        endgameHide = findViewById(R.id.endgameTxt);
         AutoChange= findViewById(R.id.autoChange);
         Blue_Alliance = findViewById(R.id.Blue_Alliance);
         Red_Alliance = findViewById(R.id.Red_Alliance);
@@ -189,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
             if(mode.equals("auto")) {
                 mode = "teleop";
                 submit.setVisibility(View.VISIBLE);
+                endgameHide.setVisibility(View.VISIBLE);
+                EndgameEngage.setVisibility(View.VISIBLE);
                 AutoChange.setText("TELEOP");
                 for(int i=0; i < grid.length; i++){
                     for(int j=0; j<grid[i].length; j++) {
@@ -203,6 +203,9 @@ public class MainActivity extends AppCompatActivity {
                 mode = "auto";
                 AutoChange.setText("AUTO");
                 submit.setVisibility(View.INVISIBLE);
+
+                endgameHide.setVisibility(View.INVISIBLE);
+                EndgameEngage.setVisibility(View.INVISIBLE);
                 for(int i=0; i < grid.length; i++){
                     for(int j=0; j<grid[i].length; j++) {
                         if(!imArray[i][j].isEnabled()) {
