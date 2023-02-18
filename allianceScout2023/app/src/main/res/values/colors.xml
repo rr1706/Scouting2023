@@ -11,4 +11,6 @@
     <color name="darkPurple">#29068A</color>
     <color name="gray">#E4DBDA</color>
     <color name="green">#0CD814</color>
+    <color name="NewBlue">#2196F3</color>
+    <color name="NewRed">#F03D42</color>
 </resources>

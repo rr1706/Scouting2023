@@ -8,16 +8,17 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/autoHint4"
+        android:id="@+id/endgameTxt"
         android:layout_width="118dp"
         android:layout_height="22dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="12dp"
         android:text="Endgame Station"
         android:textSize="14sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/endgameSpinner"
         app:layout_constraintStart_toEndOf="@+id/robotError"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TableLayout
         android:id="@+id/tableLayout"
@@ -479,12 +480,13 @@
         android:id="@+id/endgameSpinner"
         android:layout_width="100dp"
         android:layout_height="45dp"
-        android:layout_marginStart="512dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="536dp"
+        android:layout_marginTop="44dp"
         android:background="@color/white"
         android:entries="@array/endgameEngage"
         android:popupBackground="@color/white"
         android:spinnerMode="dropdown"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
 

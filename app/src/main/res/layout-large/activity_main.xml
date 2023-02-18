@@ -21,12 +21,13 @@
         app:layout_constraintVertical_bias="0.142" />
 
     <TextView
-        android:id="@+id/autoHint3"
+        android:id="@+id/endgameTxt"
         android:layout_width="194dp"
         android:layout_height="32dp"
         android:layout_marginStart="28dp"
         android:text="Endgame Station"
         android:textSize="24sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/endgameSpinner"
         app:layout_constraintStart_toEndOf="@+id/robotError"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout"
@@ -271,8 +272,10 @@
         android:entries="@array/endgameEngage"
         android:popupBackground="@color/white"
         android:spinnerMode="dropdown"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/dummyTeam"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+        tools:visibility="visible" />
 
     <Switch
         android:id="@+id/robotError"
