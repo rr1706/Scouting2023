@@ -3,24 +3,19 @@ package com.frc1706.alliancescout2023;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.os.Environment;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -31,30 +26,25 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOError;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    int navT1 = 0;
-    int navT2 = 0;
-    int navT3 = 0;
-    int scoreT1 = 0;
-    int scoreT2 = 0;
-    int scoreT3 = 0;
-    int loadT1 = 0;
-    int loadT2 = 0;
-    int loadT3 = 0;
-
-
+    int round = 1;
     SeekBar defSeekTeam1,defSeekTeam2,defSeekTeam3;
     CheckBox defChkTeam1,defChkTeam2,defChkTeam3;
 
@@ -161,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         commentT2 = findViewById(R.id.team2Notes);
         commentT3 = findViewById(R.id.team3Notes);
 
-
+        match.setText(String.valueOf(round));
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -290,32 +280,26 @@ public class MainActivity extends AppCompatActivity {
                     team3Txt.setTextColor(getResources().getColor(R.color.NewBlue));
 
 
-                    for(int i=0;i<3;i++) {
-                        CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
-                        relativeLayout.setBackgroundColor(Color.BLUE);
-                        TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
-                        textView.setTextColor(Color.WHITE);
-                    }
+
 
 
                 } else if (alliance_sel.getSelectedItem().toString().equals("RED")) {
                     for (View line : lines) {
                         line.setBackgroundColor(Color.RED);
                     }
-                    for(int i=0;i<3;i++) {
-                        CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
-                        relativeLayout.setBackgroundColor(Color.RED);
-                        TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
-                        textView.setTextColor(Color.WHITE);
-                    }
+
                     inputTeams.setTextColor(getResources().getColor(R.color.NewRed));
                     team1Txt.setTextColor(getResources().getColor(R.color.NewRed));
                     team2Txt.setTextColor(getResources().getColor(R.color.NewRed));
                     team3Txt.setTextColor(getResources().getColor(R.color.NewRed));
                 }
+                ColorView();
             }
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
+        Drawable textBackground = match.getBackground();
+
+        Drawable spinnerbackground = alliance_sel.getBackground();
 
         submit.setOnClickListener(v->{
             String[] strings = {"","",""};
@@ -325,10 +309,314 @@ public class MainActivity extends AppCompatActivity {
                 String info = (String) textView.getText();
                 strings[i] = info;
             }
-            Log.e("A", Arrays.toString(strings));
 
+            String submitError = "";
+            SimpleDateFormat time = new SimpleDateFormat("dd-HHmmss", Locale.getDefault());
+
+            int round;
+            //Special handling
+            if (match.getText().toString().equals("")) {
+                round = -1;
+            } else {
+                round = Integer.parseInt(match.getText().toString());
+            }
+            //These are telling the toast what to put in the error field, and it changes the color to yellow.
+            if (alliance_sel.getSelectedItem().equals("Alliance")) {
+                submitError += " No Alliance,";
+                alliance_sel.setBackgroundColor(Color.argb(255, 255, 255, 0));
+            }
+            if (scouter.getText().toString().equals("")) {
+                submitError += " No Name,";
+                scouter.setBackgroundColor(Color.argb(255, 255, 255, 0));
+            }
+            if (match.getText().toString().equals("420")) {
+                submitError += " No. Its not even funny,";
+                match.setBackgroundColor(Color.argb(255, 255, 255, 0));
+            }
+            if (!submitError.equals("")) {
+                submitError = submitError.substring(0, submitError.length() - 1) + ".";
+            }
+            //If any of the above are true, the thing returns a submit error.
+            if (!(submitError.equals(""))) {
+                Toast.makeText(getApplicationContext(), "Submit Error:" + submitError, Toast.LENGTH_LONG).show();
+            } else {
+                //This is what happens whenever all is correct
+
+                match.setBackground(textBackground);
+                scouter.setBackground(textBackground);
+                alliance_sel.setBackground(spinnerbackground);
+
+                //Save data for transfer
+                File dir = getDataDirectory();
+                //This creates a file
+                try {
+                    File myFile = new File(dir, team1.getText().toString() + "_" + round + "_" + time.format(new Date()) + ".txt");
+                    FileOutputStream fOut = new FileOutputStream(myFile, true);
+                    PrintWriter myOutWriter = new PrintWriter(new OutputStreamWriter(fOut));
+                    //This prints all of the lines into the file for transfer.
+                    myOutWriter.println("Scouter: " + scouter.getText());
+                    myOutWriter.println("Team: " + team1.getText().toString());
+                    myOutWriter.println("Timestamp: " + time.format(new Date()));
+                    myOutWriter.println("Match: " + round);
+                    myOutWriter.println("Alliance: " + alliance_sel.getSelectedItem().toString());
+                    myOutWriter.println("Robot Errors: ");
+                    myOutWriter.println("Auto Docked: " );
+                    myOutWriter.println("Auto Top: " );
+                    myOutWriter.println("Auto Middle: " );
+                    myOutWriter.println("Auto Bottom: " );
+                    myOutWriter.println("Tele Top: " );
+                    myOutWriter.println("Tele Middle: " );
+                    myOutWriter.println("Tele Bottom: " );
+                    myOutWriter.println("Missed Intakes: ");
+                    myOutWriter.println("Top Array: ");
+                    myOutWriter.println("Middle Array: " );
+                    myOutWriter.println("Bottom Array: ");
+                    myOutWriter.println("Endgame: " );
+                    myOutWriter.println("Notes: " );
+
+                    //Defense Played
+                    myOutWriter.println("Defense Played: " + defChkTeam1.isChecked());
+                    //Defense Score 1-5
+                    if(defChkTeam1.isChecked()) {
+                        myOutWriter.println("Defense Score: " + defSeekTeam1.getProgress());
+                    } else {
+                        myOutWriter.println("Defense Score: N/A");
+                    }
+
+                    // Score of Quickness Load
+                    myOutWriter.println("Quickness Load: " + loadTxtT1.getText().toString());
+
+                    //Score of Quickness Score
+                    myOutWriter.println("Quickness Score: " + scoreTxtT1.getText().toString());
+
+                    //Score of Defense Navigation
+                    myOutWriter.println("Defense navigation: " + navTxtT1.getText().toString());
+
+                    for(int i=0;i<3;i++) {
+                        if(Objects.equals(strings[i], team1.getText().toString())) {
+                            myOutWriter.println("Team Order: " + strings[i]);
+                            break;
+                        }
+                    }
+                    //Comments of Team
+                    myOutWriter.println("Comments: " + commentT1.getText().toString());
+
+
+
+
+                    myOutWriter.flush();
+                    myOutWriter.close();
+                    fOut.close();
+
+
+                    myFile = new File(dir, team2.getText().toString() + "_" + round + "_" + time.format(new Date()) + ".txt");
+                    fOut = new FileOutputStream(myFile, true);
+                    myOutWriter = new PrintWriter(new OutputStreamWriter(fOut));
+                    //This prints all of the lines into the file for transfer.
+                    myOutWriter.println("Scouter: " + scouter.getText());
+                    myOutWriter.println("Team: " + team2.getText().toString());
+                    myOutWriter.println("Timestamp: " + time.format(new Date()));
+                    myOutWriter.println("Match: " + round);
+                    myOutWriter.println("Alliance: " + alliance_sel.getSelectedItem().toString());
+                    myOutWriter.println("Robot Errors: ");
+                    myOutWriter.println("Auto Docked: " );
+                    myOutWriter.println("Auto Top: " );
+                    myOutWriter.println("Auto Middle: " );
+                    myOutWriter.println("Auto Bottom: " );
+                    myOutWriter.println("Tele Top: " );
+                    myOutWriter.println("Tele Middle: " );
+                    myOutWriter.println("Tele Bottom: " );
+                    myOutWriter.println("Missed Intakes: ");
+                    myOutWriter.println("Top Array: ");
+                    myOutWriter.println("Middle Array: " );
+                    myOutWriter.println("Bottom Array: ");
+                    myOutWriter.println("Endgame: " );
+                    myOutWriter.println("Notes: " );
+
+                    //Defense Played
+                    myOutWriter.println("Defense Played: " + defChkTeam2.isChecked());
+                    //Defense Score 1-5
+                    if(defChkTeam2.isChecked()) {
+                        myOutWriter.println("Defense Score: " + defSeekTeam2.getProgress());
+                    } else {
+                        myOutWriter.println("Defense Score: N/A");
+                    }
+
+                    // Score of Quickness Load
+                    myOutWriter.println("Quickness Load: " + loadTxtT2.getText().toString());
+
+                    //Score of Quickness Score
+                    myOutWriter.println("Quickness Score: " + scoreTxtT2.getText().toString());
+
+                    //Score of Defense Navigation
+                    myOutWriter.println("Defense navigation: " + navTxtT2.getText().toString());
+
+                    //Order of teams
+
+                    for(int i=0;i<3;i++) {
+                        if(Objects.equals(strings[i], team2.getText().toString())) {
+                            myOutWriter.println("Team Order: " + strings[i]);
+                            break;
+                        }
+                    }
+
+
+
+                    //Comments of Team
+                    myOutWriter.println("Comments: " + commentT2.getText().toString());
+
+
+
+
+                    myOutWriter.flush();
+                    myOutWriter.close();
+                    fOut.close();
+
+
+                    myFile = new File(dir, team3.getText().toString() + "_" + round + "_" + time.format(new Date()) + ".txt");
+                    fOut = new FileOutputStream(myFile, true);
+                    myOutWriter = new PrintWriter(new OutputStreamWriter(fOut));
+                    //This prints all of the lines into the file for transfer.
+                    myOutWriter.println("Scouter: " + scouter.getText());
+                    myOutWriter.println("Team: " + team3.getText().toString());
+                    myOutWriter.println("Timestamp: " + time.format(new Date()));
+                    myOutWriter.println("Match: " + round);
+                    myOutWriter.println("Alliance: " + alliance_sel.getSelectedItem().toString());
+                    myOutWriter.println("Robot Errors: ");
+                    myOutWriter.println("Auto Docked: " );
+                    myOutWriter.println("Auto Top: " );
+                    myOutWriter.println("Auto Middle: " );
+                    myOutWriter.println("Auto Bottom: " );
+                    myOutWriter.println("Tele Top: " );
+                    myOutWriter.println("Tele Middle: " );
+                    myOutWriter.println("Tele Bottom: " );
+                    myOutWriter.println("Missed Intakes: ");
+                    myOutWriter.println("Top Array: ");
+                    myOutWriter.println("Middle Array: " );
+                    myOutWriter.println("Bottom Array: ");
+                    myOutWriter.println("Endgame: " );
+                    myOutWriter.println("Notes: " );
+
+                    //Defense Played
+                    myOutWriter.println("Defense Played: " + defChkTeam3.isChecked());
+                    //Defense Score 1-5
+                    if(defChkTeam3.isChecked()) {
+                        myOutWriter.println("Defense Score: " + defSeekTeam3.getProgress());
+                    } else {
+                        myOutWriter.println("Defense Score: N/A");
+                    }
+
+                    // Score of Quickness Load
+                    myOutWriter.println("Quickness Load: " + loadTxtT3.getText().toString());
+
+                    //Score of Quickness Score
+                    myOutWriter.println("Quickness Score: " + scoreTxtT3.getText().toString());
+
+                    //Score of Defense Navigation
+                    myOutWriter.println("Defense navigation: " + navTxtT3.getText().toString());
+
+                    for(int i=0;i<3;i++) {
+                        if(Objects.equals(strings[i], team3.getText().toString())) {
+                            myOutWriter.println("Team Order: " + String.valueOf(i));
+                            break;
+                        }
+                    }
+                    //Comments of Team
+                    myOutWriter.println("Comments: " + commentT3.getText().toString());
+
+                    myOutWriter.flush();
+                    myOutWriter.close();
+                    fOut.close();
+
+                    Toast.makeText(getApplicationContext(), "Data Submitted!", Toast.LENGTH_SHORT).show();
+
+                } catch (IOException e) {
+                    //If anything goes wrong, it throws an error instead of crashing
+                    Toast.makeText(getApplicationContext(), "Data Submission Failed! (TELL SCOUTING)", Toast.LENGTH_SHORT).show();
+                    Log.e("Exception", "File write failed: " + e);
+                }
+                //Reset Everything
+                resetVars();
+                for (View line : lines) {
+                    line.setBackgroundColor(Color.WHITE);
+                }
+                alliance_sel.setBackground(spinnerbackground);
+
+            }
         });
+    }
 
+
+    private void resetVars() {
+        scouter.setText("");
+        match.setText("");
+        alliance_sel.setSelection(0);
+        team1.setText("");
+        team2.setText("");
+        team3.setText("");
+        defChkTeam1.setChecked(false);
+        defChkTeam2.setChecked(false);
+        defChkTeam3.setChecked(false);
+        defSeekTeam1.setProgress(0);
+        defSeekTeam2.setProgress(0);
+        defSeekTeam3.setProgress(0);
+        defSeekTeam1.setVisibility(View.INVISIBLE);
+        defSeekTeam2.setVisibility(View.INVISIBLE);
+        defSeekTeam3.setVisibility(View.INVISIBLE);
+        team1Txt.setText("TEAM 1");
+        team2Txt.setText("TEAM 2");
+        team3Txt.setText("TEAM 3");
+        scoreTxtT1.setText("0");
+        scoreTxtT2.setText("0");
+        scoreTxtT3.setText("0");
+        loadTxtT1.setText("0");
+        loadTxtT2.setText("0");
+        loadTxtT3.setText("0");
+        navTxtT1.setText("0");
+        navTxtT2.setText("0");
+        navTxtT3.setText("0");
+
+        if(getTeams().equals("")) {
+            stringArrayList.set(0,"Team #1");
+            stringArrayList.set(1,"Team #2");
+            stringArrayList.set(2,"Team #3");
+            mAdapter = new RecyclerViewAdapter(stringArrayList);
+            ItemTouchHelper.Callback callback = new ItemMoveCallback(mAdapter);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            touchHelper.attachToRecyclerView(recyclerView);
+            recyclerView.setAdapter(mAdapter);
+        } //NEED TO ADD AUTO FILL LOGIC
+
+        commentT1.setText("");
+        commentT2.setText("");
+        commentT3.setText("");
+        commentT1.setHint("Team 1 Notes:");
+        commentT2.setHint("Team 2 Notes:");
+        commentT3.setHint("Team 3 Notes:");
+        round += 1;
+        match.setText(String.valueOf(round));
+
+
+
+
+    }
+
+    private void ColorView() {
+        if (alliance_sel.getSelectedItem().toString().equals("BLUE")) {
+            for(int i=0;i<3;i++) {
+                CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
+                relativeLayout.setBackgroundColor(Color.BLUE);
+                TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
+                textView.setTextColor(Color.WHITE);
+            }
+        } else if (alliance_sel.getSelectedItem().toString().equals("RED")) {
+            for(int i=0;i<3;i++) {
+                CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
+                relativeLayout.setBackgroundColor(Color.RED);
+                TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
+                textView.setTextColor(Color.WHITE);
+            }
+        }
     }
 
     private void modScore(TextView team,boolean minus) {
@@ -362,6 +650,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e("log", text.toString());
         return text.toString();
     }
+
     public void onBackPressed() {}
 
     private File getDataDirectory() {
@@ -375,6 +664,7 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
     public void rankUpdate() {
         if(!team1.getText().toString().equals("") && !team2.getText().toString().equals("") && !team3.getText().toString().equals("")) {
             stringArrayList.set(0,team1.getText().toString());
@@ -389,13 +679,17 @@ public class MainActivity extends AppCompatActivity {
             team2Txt.setText(team2.getText().toString());
             team3Txt.setText(team3.getText().toString());
 
-            mAdapter = new RecyclerViewAdapter(stringArrayList);
-            ItemTouchHelper.Callback callback = new ItemMoveCallback(mAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-            touchHelper.attachToRecyclerView(recyclerView);
-            recyclerView.setAdapter(mAdapter);
+
+
+            for(int i = 0; i<3; i++) {
+                CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
+                TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
+                textView.setText(stringArrayList.get(i));
+            }
+
         }
     }
+
     private void populateRecyclerView() {
 
         stringArrayList.add("TEAM #1");
@@ -410,4 +704,6 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(mAdapter);
     }
+
+
 }

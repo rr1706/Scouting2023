@@ -709,7 +709,7 @@
         app:layout_constraintTop_toTopOf="@+id/team3EditTxt" />
 
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam1Load"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -722,7 +722,7 @@
         app:layout_constraintStart_toEndOf="@+id/team1EditTxt"
         app:layout_constraintTop_toTopOf="@+id/team1EditTxt" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam2Load"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -735,7 +735,7 @@
         app:layout_constraintStart_toEndOf="@+id/team1EditTxt"
         app:layout_constraintTop_toTopOf="@+id/team2EditTxt" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam3Load"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -748,7 +748,7 @@
         app:layout_constraintStart_toEndOf="@+id/team1EditTxt"
         app:layout_constraintTop_toTopOf="@+id/team3EditTxt" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam1Score"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -762,7 +762,7 @@
         app:layout_constraintTop_toTopOf="@+id/team1EditTxt"
         app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam2Score"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -775,7 +775,7 @@
         app:layout_constraintStart_toEndOf="@+id/team1EditTxt"
         app:layout_constraintTop_toTopOf="@+id/team2EditTxt" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam3Score"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -788,7 +788,7 @@
         app:layout_constraintStart_toEndOf="@+id/team1EditTxt"
         app:layout_constraintTop_toTopOf="@+id/team3EditTxt" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam1Nav"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -802,7 +802,7 @@
         app:layout_constraintTop_toTopOf="@+id/team1EditTxt"
         app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam2Nav"
         android:layout_width="45dp"
         android:layout_height="40dp"
@@ -815,7 +815,7 @@
         app:layout_constraintStart_toEndOf="@+id/team1EditTxt"
         app:layout_constraintTop_toTopOf="@+id/team2EditTxt" />
 
-    <EditText
+    <TextView
         android:id="@+id/textTeam3Nav"
         android:layout_width="45dp"
         android:layout_height="40dp"

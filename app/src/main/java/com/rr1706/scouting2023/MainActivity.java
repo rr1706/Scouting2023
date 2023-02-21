@@ -653,6 +653,15 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.println("Endgame: " + EndgameEngage.getSelectedItem());
                     myOutWriter.println("Notes: " + notes.getText());
 
+                    myOutWriter.println("Defense Played: ");
+                    myOutWriter.println("Defense Score: ");
+                    myOutWriter.println("Quickness Load: ");
+                    myOutWriter.println("Quickness Score: ");
+                    myOutWriter.println("Defense navigation: ");
+                    myOutWriter.println("Team Order: ");
+                    myOutWriter.println("Comments: ");
+
+
                     myOutWriter.flush();
                     myOutWriter.close();
                     fOut.close();
