@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOError;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -49,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
     CheckBox defChkTeam1,defChkTeam2,defChkTeam3;
 
 
-
+    String tabletName;
+    int tabletnumber;
+    String sameScouter;
     Spinner alliance_sel;
     View line1,line2,line3,line4,line5,line6,line7,line8,line9,line10,line11,line12,line13;
 
@@ -70,6 +74,20 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        tabletName = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
+
+
+        Log.e("New Name",tabletName);
+        switch (tabletName) {
+            case "1706's 8th Fire":
+                tabletnumber = 8;
+                break;
+            case "1706's 9th Fire":
+                tabletnumber = 9;
+                break;
+        }
+
+
 
         //Spinner
         alliance_sel = findViewById(R.id.alliance_input);
@@ -165,16 +183,35 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         populateRecyclerView();
 
-        getTeams();
+        Log.e("NUMB", String.valueOf(tabletnumber));
+        if(tabletnumber==8) {
+            alliance_sel.setSelection(2);
+            for (View line : lines) {
+                line.setBackgroundColor(Color.RED);
+            }
 
-        if(!getTeams().equals("")) {
-            team1.setVisibility(View.GONE);
-            team2.setVisibility(View.GONE);
-            team3.setVisibility(View.GONE);
-            line4.setVisibility(View.GONE);
-            line5.setVisibility(View.GONE);
-            line6.setVisibility(View.GONE);
-            inputTeams.setVisibility(View.GONE);
+            inputTeams.setTextColor(getResources().getColor(R.color.NewRed));
+            team1Txt.setTextColor(getResources().getColor(R.color.NewRed));
+            team2Txt.setTextColor(getResources().getColor(R.color.NewRed));
+            team3Txt.setTextColor(getResources().getColor(R.color.NewRed));
+
+        } else if(tabletnumber==9) {
+            alliance_sel.setSelection(1);
+            for (View line : lines) {
+                line.setBackgroundColor(Color.BLUE);
+            }
+
+            inputTeams.setTextColor(getResources().getColor(R.color.NewBlue));
+            team1Txt.setTextColor(getResources().getColor(R.color.NewBlue));
+            team2Txt.setTextColor(getResources().getColor(R.color.NewBlue));
+            team3Txt.setTextColor(getResources().getColor(R.color.NewBlue));
+        }
+
+        autoFill();
+        try{
+            rankUpdate();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
 
         defChkTeam1.setOnClickListener(v->{
@@ -225,6 +262,10 @@ public class MainActivity extends AppCompatActivity {
         match.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+                autoFill();
+                rankUpdate();
+
+
             }
         });
         scouter.setOnFocusChangeListener((v, hasFocus) -> {
@@ -282,7 +323,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
                 } else if (alliance_sel.getSelectedItem().toString().equals("RED")) {
                     for (View line : lines) {
                         line.setBackgroundColor(Color.RED);
@@ -293,6 +333,9 @@ public class MainActivity extends AppCompatActivity {
                     team2Txt.setTextColor(getResources().getColor(R.color.NewRed));
                     team3Txt.setTextColor(getResources().getColor(R.color.NewRed));
                 }
+                autoFill();
+                rankUpdate();
+
                 ColorView();
             }
             public void onNothingSelected(AdapterView<?> arg0) {}
@@ -535,19 +578,26 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Data Submission Failed! (TELL SCOUTING)", Toast.LENGTH_SHORT).show();
                     Log.e("Exception", "File write failed: " + e);
                 }
+                sameScouter = scouter.getText().toString();
                 //Reset Everything
                 resetVars();
                 for (View line : lines) {
                     line.setBackgroundColor(Color.WHITE);
                 }
                 alliance_sel.setBackground(spinnerbackground);
+                scouter.setText(sameScouter);
 
             }
         });
+
     }
 
 
     private void resetVars() {
+
+        team1.setEnabled(true);
+        team2.setEnabled(true);
+        team3.setEnabled(true);
         scouter.setText("");
         match.setText("");
         alliance_sel.setSelection(0);
@@ -601,6 +651,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     private void ColorView() {
         if (alliance_sel.getSelectedItem().toString().equals("BLUE")) {
             for(int i=0;i<3;i++) {
@@ -647,11 +699,48 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e("log", text.toString());
+
         return text.toString();
     }
 
     public void onBackPressed() {}
+
+    private void autoFill() {
+        if(!getTeams().equals("")) {
+            team1.setEnabled(false);
+            team2.setEnabled(false);
+            team3.setEnabled(false);
+            String[] tempIntArr;
+            String[] splittempIntArr;
+            tempIntArr = getTeams().split("\n");
+            int arrayRound = Integer.parseInt(match.getText().toString()) - 1;
+            splittempIntArr = tempIntArr[arrayRound].split(",");
+
+            if (alliance_sel.getSelectedItem().toString().equals("RED")) {
+                try {
+                    team1.setText(splittempIntArr[0]);
+                    team2.setText(splittempIntArr[1]);
+                    team3.setText(splittempIntArr[2]);
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+
+
+            } else if (alliance_sel.getSelectedItem().toString().equals("BLUE")) {
+                try {
+                    team1.setText(splittempIntArr[3]);
+                    team2.setText(splittempIntArr[4]);
+                    team3.setText(splittempIntArr[5]);
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+    }
 
     private File getDataDirectory() {
         File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
