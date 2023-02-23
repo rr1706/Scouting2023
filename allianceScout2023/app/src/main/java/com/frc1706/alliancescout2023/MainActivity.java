@@ -336,7 +336,11 @@ public class MainActivity extends AppCompatActivity {
                 autoFill();
                 rankUpdate();
 
-                ColorView();
+                try{
+                    ColorView();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
