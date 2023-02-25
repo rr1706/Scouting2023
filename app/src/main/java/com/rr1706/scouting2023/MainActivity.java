@@ -45,12 +45,12 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    ImageView btnPlus,btnMinus,data_submitted,rrlogo,cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5, cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11,both0,both1,both2,both3,both4,both5,both6,both7,both8;
+    ImageView data_submitted,rrlogo,cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5, cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11,both0,both1,both2,both3,both4,both5,both6,both7,both8;
     EditText name_input,round_input,team_input,notes;
     Spinner AutoEngage,EndgameEngage;
     Button PregameBtn,AutoChange,pregame_close,noShow,Red_Alliance,Blue_Alliance,sameScouter,submit,Gray_Box;
-    CheckBox teamAutofill;
-    TextView allianceText,missedScore,dummyTeam,endgameHide;
+    CheckBox teamAutofill,playedDefense;
+    TextView allianceText,dummyTeam,endgameHide;
     Switch robotError;
 
     int teleTop;
@@ -89,9 +89,7 @@ public class MainActivity extends AppCompatActivity {
         dummyTeam = findViewById(R.id.dummyTeam);
         robotError = findViewById(R.id.robotError);
         submit = findViewById(R.id.submit);
-        missedScore = findViewById(R.id.missedScore);
-        btnPlus = findViewById(R.id.btnPlus);
-        btnMinus = findViewById(R.id.btnMinus);
+        playedDefense = findViewById(R.id.playedDefense);
         data_submitted = findViewById(R.id.data_submitted);
         teamAutofill = findViewById(R.id.autoFill);
         sameScouter = findViewById(R.id.sameScouter);
@@ -311,18 +309,6 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         };
-        btnPlus.setOnClickListener(v -> {
-            if (missedIntake < 99) {
-                missedIntake++;
-            }
-            missedScore.setText(Integer.toString(missedIntake));
-        });
-        btnMinus.setOnClickListener(v -> {
-            if (missedIntake > 0) {
-                missedIntake--;
-            }
-            missedScore.setText(Integer.toString(missedIntake));
-        });
 
         Thread myThread = new Thread(myRunnable);
         myThread.start();
@@ -644,7 +630,7 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.println("Tele Middle: " + teleMid);
                     myOutWriter.println("Tele Bottom: " + teleLow);
 
-                    myOutWriter.println("Missed Intakes: " + missedScore.getText().toString());
+                    myOutWriter.println("Played Defense: " + playedDefense.isChecked());
 
                     myOutWriter.println("Top Array: " + Arrays.toString(grid[0]));
                     myOutWriter.println("Middle Array: " + Arrays.toString(grid[1]));
@@ -759,7 +745,7 @@ public class MainActivity extends AppCompatActivity {
         submit.setVisibility(View.INVISIBLE);
         mode = "auto";
         robotError.setChecked(false);
-        missedScore.setText("0");
+        playedDefense.setChecked(false);
         Pregame.setVisibility(View.VISIBLE);
         Gray_Box.setVisibility(View.VISIBLE);
         notes.setVisibility(View.INVISIBLE);
