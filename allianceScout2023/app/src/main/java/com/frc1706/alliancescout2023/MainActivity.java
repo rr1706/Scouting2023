@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
+import android.content.RestrictionEntry;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -28,6 +30,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,7 +50,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     int round = 1;
-    SeekBar defSeekTeam1,defSeekTeam2,defSeekTeam3;
+    SeekBar defSeekTeam1,defSeekTeam2;
     CheckBox defChkTeam1,defChkTeam2,defChkTeam3;
 
 
@@ -55,15 +58,12 @@ public class MainActivity extends AppCompatActivity {
     int tabletnumber;
     String sameScouter;
     Spinner alliance_sel;
-    View line1,line2,line3,line4,line5,line6,line7,line8,line9,line10,line11,line12,line13;
+    View line1,line2,line3,line4,line6,line7,line8,line10,line12;
+    ToggleButton team1Op,team2Op,team3Op;
+    EditText team1,team2,team3,scouter,match,commentT1,commentT2;
+    TextView inputTeams,loadTxtT1,loadTxtT2,loadTxtT3,scoreTxtT1,scoreTxtT2,scoreTxtT3,navTxtT1,navTxtT2,navTxtT3,team2Txt,team1Txt,playDefTxt,driverTxt,worstTxt,bestTxt,team1Txt2,team2Txt2;
 
-    EditText team1,team2,team3,scouter,match,commentT1,commentT2,commentT3;
-    TextView inputTeams,loadTxtT1,loadTxtT2,loadTxtT3,scoreTxtT1,scoreTxtT2,scoreTxtT3,navTxtT1,navTxtT2,navTxtT3,team2Txt,team1Txt,team3Txt;
-
-    RecyclerView recyclerView;
-    RecyclerViewAdapter mAdapter;
-    ArrayList<String> stringArrayList = new ArrayList<>();
-    Button quickLoadMinusT1,quickLoadPlusT1,quickLoadMinusT2,quickLoadPlusT2,quickLoadMinusT3,quickLoadPlusT3,quickScoreMinusT1,quickScorePlusT1,quickScoreMinusT2,quickScorePlusT2,quickScoreMinusT3,quickScorePlusT3,navDefMinusT1,navDefPlusT1,navDefMinusT2,navDefPlusT2,navDefMinusT3,navDefPlusT3,submit;
+    Button quickLoadMinusT1,quickLoadPlusT1,quickLoadMinusT2,quickLoadPlusT2,quickScoreMinusT1,quickScorePlusT1,quickScoreMinusT2,quickScorePlusT2,submit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,55 +86,49 @@ public class MainActivity extends AppCompatActivity {
                 tabletnumber = 9;
                 break;
         }
-
-
-
         //Spinner
         alliance_sel = findViewById(R.id.alliance_input);
 
-        //Recycler
-        recyclerView = findViewById(R.id.recyclerView);
+        //Toggle Button
+        team1Op = findViewById(R.id.team1Op);
+        team2Op  = findViewById(R.id.team2Op);
+        team3Op = findViewById(R.id.team3Op);
 
         //Lines
         line1= findViewById(R.id.line1);
         line2= findViewById(R.id.line2);
         line3 = findViewById(R.id.line3);
         line4= findViewById(R.id.line4);
-        line5= findViewById(R.id.line5);
         line6 = findViewById(R.id.line6);
         line7 = findViewById(R.id.line7);
         line8 = findViewById(R.id.line8);
-        line9 = findViewById(R.id.line9);
         line10 = findViewById(R.id.line10);
-        line11 = findViewById(R.id.line11);
         line12 = findViewById(R.id.line12);
-        line13 = findViewById(R.id.line13);
-        View[] lines = {line1,line2,line3,line4,line5,line6,line7,line8,line9,line10,line11,line12,line13};
+        View[] lines = {line1,line2,line3,line4,line6,line7,line8,line10,line12};
 
         //CheckBox
         defChkTeam1 = findViewById(R.id.team1DefCK);
         defChkTeam2 = findViewById(R.id.team2DefCK);
-        defChkTeam3 = findViewById(R.id.team3DefCK);
 
         //Seekbar
         defSeekTeam1 = findViewById(R.id.team1DefSEEK);
         defSeekTeam2 = findViewById(R.id.team2DefSEEK);
-        defSeekTeam3 = findViewById(R.id.team3DefSEEK);
 
         //TextView
         inputTeams = findViewById(R.id.inputTeamsTxt);
         loadTxtT1 = findViewById(R.id.textTeam1Load);
         loadTxtT2 = findViewById(R.id.textTeam2Load);
-        loadTxtT3 = findViewById(R.id.textTeam3Load);
         scoreTxtT1 = findViewById(R.id.textTeam1Score);
         scoreTxtT2 = findViewById(R.id.textTeam2Score);
-        scoreTxtT3 = findViewById(R.id.textTeam3Score);
-        navTxtT1 = findViewById(R.id.textTeam1Nav);
-        navTxtT2 = findViewById(R.id.textTeam2Nav);
-        navTxtT3 = findViewById(R.id.textTeam3Nav);
         team1Txt = findViewById(R.id.team1EditTxt);
         team2Txt = findViewById(R.id.team2EditTxt);
-        team3Txt = findViewById(R.id.team3EditTxt);
+        playDefTxt = findViewById(R.id.playDefTxt);
+        driverTxt = findViewById(R.id.driverTxt);
+        worstTxt = findViewById(R.id.worstTxt);
+        bestTxt = findViewById(R.id.bestTxt);
+        team1Txt2 = findViewById(R.id.team1EditTxt2);
+        team2Txt2 = findViewById(R.id.team2EditTxt2);
+
 
         //Buttons
         submit = findViewById(R.id.submit);
@@ -142,32 +136,19 @@ public class MainActivity extends AppCompatActivity {
         quickLoadPlusT1 = findViewById(R.id.plusTeam1Load);
         quickLoadMinusT2 = findViewById(R.id.minusTeam2Load);
         quickLoadPlusT2 = findViewById(R.id.plusTeam2Load);
-        quickLoadMinusT3 = findViewById(R.id.minusTeam3Load);
-        quickLoadPlusT3 = findViewById(R.id.plusTeam3Load);
         quickScoreMinusT1 = findViewById(R.id.minusTeam1Score);
         quickScorePlusT1 = findViewById(R.id.plusTeam1Score);
         quickScoreMinusT2 = findViewById(R.id.minusTeam2Score);
         quickScorePlusT2 = findViewById(R.id.plusTeam2Score);
-        quickScoreMinusT3 = findViewById(R.id.minusTeam3Score);
-        quickScorePlusT3 = findViewById(R.id.plusTeam3Score);
-        navDefMinusT1 = findViewById(R.id.minusTeam1Nav);
-        navDefPlusT1 = findViewById(R.id.plusTeam1Nav);
-        navDefMinusT2 = findViewById(R.id.minusTeam2Nav);
-        navDefPlusT2 = findViewById(R.id.plusTeam2Nav);
-        navDefMinusT3 = findViewById(R.id.minusTeam3Nav);
-        navDefPlusT3 = findViewById(R.id.plusTeam3Nav);
-
 
 
         //EditText
         team1 = findViewById(R.id.team1);
         team2 = findViewById(R.id.team2);
-        team3 = findViewById(R.id.team3);
         scouter = findViewById(R.id.name_input);
         match = findViewById(R.id.round_input);
         commentT1 = findViewById(R.id.team1Notes);
         commentT2 = findViewById(R.id.team2Notes);
-        commentT3 = findViewById(R.id.team3Notes);
 
         match.setText(String.valueOf(round));
 
@@ -178,11 +159,6 @@ public class MainActivity extends AppCompatActivity {
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 1);
 
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setHasFixedSize(true);
-        populateRecyclerView();
-
         Log.e("NUMB", String.valueOf(tabletnumber));
         if(tabletnumber==8) {
             alliance_sel.setSelection(2);
@@ -190,10 +166,9 @@ public class MainActivity extends AppCompatActivity {
                 line.setBackgroundColor(Color.RED);
             }
 
-            inputTeams.setTextColor(getResources().getColor(R.color.NewRed));
-            team1Txt.setTextColor(getResources().getColor(R.color.NewRed));
-            team2Txt.setTextColor(getResources().getColor(R.color.NewRed));
-            team3Txt.setTextColor(getResources().getColor(R.color.NewRed));
+            textColorChange("red");
+
+
 
         } else if(tabletnumber==9) {
             alliance_sel.setSelection(1);
@@ -201,18 +176,12 @@ public class MainActivity extends AppCompatActivity {
                 line.setBackgroundColor(Color.BLUE);
             }
 
-            inputTeams.setTextColor(getResources().getColor(R.color.NewBlue));
-            team1Txt.setTextColor(getResources().getColor(R.color.NewBlue));
-            team2Txt.setTextColor(getResources().getColor(R.color.NewBlue));
-            team3Txt.setTextColor(getResources().getColor(R.color.NewBlue));
+
+            textColorChange("blue");
+
         }
 
         autoFill();
-        try{
-            rankUpdate();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
 
         defChkTeam1.setOnClickListener(v->{
             if(defChkTeam1.isChecked()) {
@@ -228,43 +197,49 @@ public class MainActivity extends AppCompatActivity {
                 defSeekTeam2.setVisibility(View.INVISIBLE);
             }
         });
-        defChkTeam3.setOnClickListener(v->{
-            if(defChkTeam3.isChecked()) {
-                defSeekTeam3.setVisibility(View.VISIBLE);
-            } else {
-                defSeekTeam3.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        navDefPlusT1.setOnClickListener(v-> modScore(navTxtT1,false));
-        navDefPlusT2.setOnClickListener(v-> modScore(navTxtT2,false));
-        navDefPlusT3.setOnClickListener(v-> modScore(navTxtT3,false));
-        navDefMinusT1.setOnClickListener(v-> modScore(navTxtT1,true));
-        navDefMinusT2.setOnClickListener(v-> modScore(navTxtT2,true));
-        navDefMinusT3.setOnClickListener(v-> modScore(navTxtT3,true));
 
         quickScorePlusT1.setOnClickListener(v-> modScore(scoreTxtT1,false));
         quickScorePlusT2.setOnClickListener(v-> modScore(scoreTxtT2,false));
-        quickScorePlusT3.setOnClickListener(v-> modScore(scoreTxtT3,false));
         quickScoreMinusT1.setOnClickListener(v-> modScore(scoreTxtT1,true));
         quickScoreMinusT2.setOnClickListener(v-> modScore(scoreTxtT2,true));
-        quickScoreMinusT3.setOnClickListener(v-> modScore(scoreTxtT3,true));
 
         quickLoadPlusT1.setOnClickListener(v-> modScore(loadTxtT1,false));
         quickLoadPlusT2.setOnClickListener(v-> modScore(loadTxtT2,false));
-        quickLoadPlusT3.setOnClickListener(v-> modScore(loadTxtT3,false));
         quickLoadMinusT1.setOnClickListener(v-> modScore(loadTxtT1,true));
         quickLoadMinusT2.setOnClickListener(v-> modScore(loadTxtT2,true));
-        quickLoadMinusT3.setOnClickListener(v-> modScore(loadTxtT3,true));
 
+        team1Op.setOnClickListener(v -> {
+            if(team1Op.isChecked()) {
+                team1Op.setTextSize((float) 24.0);
+            }else {
+                team1Op.setTextSize((float) 14.0);
+
+            }
+        });
+
+        team2Op.setOnClickListener(v -> {
+            if(team2Op.isChecked()) {
+                team2Op.setTextSize((float) 24.0);
+            } else {
+                team2Op.setTextSize((float) 14.0);
+
+            }
+        });
+
+        team3Op.setOnClickListener(v -> {
+            if(team3Op.isChecked()) {
+                team3Op.setTextSize((float) 24.0);
+            }else {
+                team3Op.setTextSize((float) 14.0);
+
+            }
+        });
 
 
         match.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
                 autoFill();
-                rankUpdate();
-
 
             }
         });
@@ -283,28 +258,13 @@ public class MainActivity extends AppCompatActivity {
                 hideKeyboard(v);
             }
         });
-        commentT3.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                hideKeyboard(v);
-            }
-        });
         team1.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                rankUpdate();
                 hideKeyboard(v);
             }
         });
         team2.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-
-                rankUpdate();
-                hideKeyboard(v);
-            }
-        });
-        team3.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-
-                rankUpdate();
                 hideKeyboard(v);
             }
         });
@@ -315,12 +275,8 @@ public class MainActivity extends AppCompatActivity {
                     for (View line : lines) {
                         line.setBackgroundColor(Color.BLUE);
                     }
-                    inputTeams.setTextColor(getResources().getColor(R.color.NewBlue));
-                    team1Txt.setTextColor(getResources().getColor(R.color.NewBlue));
-                    team2Txt.setTextColor(getResources().getColor(R.color.NewBlue));
-                    team3Txt.setTextColor(getResources().getColor(R.color.NewBlue));
 
-
+                    textColorChange("blue");
 
 
                 } else if (alliance_sel.getSelectedItem().toString().equals("RED")) {
@@ -328,19 +284,12 @@ public class MainActivity extends AppCompatActivity {
                         line.setBackgroundColor(Color.RED);
                     }
 
-                    inputTeams.setTextColor(getResources().getColor(R.color.NewRed));
-                    team1Txt.setTextColor(getResources().getColor(R.color.NewRed));
-                    team2Txt.setTextColor(getResources().getColor(R.color.NewRed));
-                    team3Txt.setTextColor(getResources().getColor(R.color.NewRed));
+                    textColorChange("red");
+
+
                 }
                 autoFill();
-                rankUpdate();
 
-                try{
-                    ColorView();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
             }
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
@@ -350,12 +299,6 @@ public class MainActivity extends AppCompatActivity {
 
         submit.setOnClickListener(v->{
             String[] strings = {"","",""};
-            for(int i=0;i<3;i++) {
-                CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
-                TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
-                String info = (String) textView.getText();
-                strings[i] = info;
-            }
 
             String submitError = "";
             SimpleDateFormat time = new SimpleDateFormat("dd-HHmmss", Locale.getDefault());
@@ -448,9 +391,6 @@ public class MainActivity extends AppCompatActivity {
                     //Comments of Team
                     myOutWriter.println("Comments: " + commentT1.getText().toString());
 
-
-
-
                     myOutWriter.flush();
                     myOutWriter.close();
                     fOut.close();
@@ -507,69 +447,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-
-
                     //Comments of Team
                     myOutWriter.println("Comments: " + commentT2.getText().toString());
-
-
-
-
-                    myOutWriter.flush();
-                    myOutWriter.close();
-                    fOut.close();
-
-
-                    myFile = new File(dir, team3.getText().toString() + "_" + round + "_" + time.format(new Date()) + ".txt");
-                    fOut = new FileOutputStream(myFile, true);
-                    myOutWriter = new PrintWriter(new OutputStreamWriter(fOut));
-                    //This prints all of the lines into the file for transfer.
-                    myOutWriter.println("Scouter: " + scouter.getText());
-                    myOutWriter.println("Team: " + team3.getText().toString());
-                    myOutWriter.println("Timestamp: " + time.format(new Date()));
-                    myOutWriter.println("Match: " + round);
-                    myOutWriter.println("Alliance: " + alliance_sel.getSelectedItem().toString());
-                    myOutWriter.println("Robot Errors: ");
-                    myOutWriter.println("Auto Docked: " );
-                    myOutWriter.println("Auto Top: " );
-                    myOutWriter.println("Auto Middle: " );
-                    myOutWriter.println("Auto Bottom: " );
-                    myOutWriter.println("Tele Top: " );
-                    myOutWriter.println("Tele Middle: " );
-                    myOutWriter.println("Tele Bottom: " );
-                    myOutWriter.println("Missed Intakes: ");
-                    myOutWriter.println("Top Array: ");
-                    myOutWriter.println("Middle Array: " );
-                    myOutWriter.println("Bottom Array: ");
-                    myOutWriter.println("Endgame: " );
-                    myOutWriter.println("Notes: " );
-
-                    //Defense Played
-                    myOutWriter.println("Defense Played: " + defChkTeam3.isChecked());
-                    //Defense Score 1-5
-                    if(defChkTeam3.isChecked()) {
-                        myOutWriter.println("Defense Score: " + defSeekTeam3.getProgress());
-                    } else {
-                        myOutWriter.println("Defense Score: N/A");
-                    }
-
-                    // Score of Quickness Load
-                    myOutWriter.println("Quickness Load: " + loadTxtT3.getText().toString());
-
-                    //Score of Quickness Score
-                    myOutWriter.println("Quickness Score: " + scoreTxtT3.getText().toString());
-
-                    //Score of Defense Navigation
-                    myOutWriter.println("Defense navigation: " + navTxtT3.getText().toString());
-
-                    for(int i=0;i<3;i++) {
-                        if(Objects.equals(strings[i], team3.getText().toString())) {
-                            myOutWriter.println("Team Order: " + String.valueOf(i));
-                            break;
-                        }
-                    }
-                    //Comments of Team
-                    myOutWriter.println("Comments: " + commentT3.getText().toString());
 
                     myOutWriter.flush();
                     myOutWriter.close();
@@ -585,11 +464,10 @@ public class MainActivity extends AppCompatActivity {
                 sameScouter = scouter.getText().toString();
                 //Reset Everything
                 resetVars();
-                for (View line : lines) {
-                    line.setBackgroundColor(Color.WHITE);
-                }
+
                 alliance_sel.setBackground(spinnerbackground);
                 scouter.setText(sameScouter);
+
 
             }
         });
@@ -598,13 +476,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void resetVars() {
-
         team1.setEnabled(true);
         team2.setEnabled(true);
         team3.setEnabled(true);
         scouter.setText("");
         match.setText("");
-        alliance_sel.setSelection(0);
         team1.setText("");
         team2.setText("");
         team3.setText("");
@@ -613,13 +489,10 @@ public class MainActivity extends AppCompatActivity {
         defChkTeam3.setChecked(false);
         defSeekTeam1.setProgress(0);
         defSeekTeam2.setProgress(0);
-        defSeekTeam3.setProgress(0);
         defSeekTeam1.setVisibility(View.INVISIBLE);
         defSeekTeam2.setVisibility(View.INVISIBLE);
-        defSeekTeam3.setVisibility(View.INVISIBLE);
         team1Txt.setText("TEAM 1");
         team2Txt.setText("TEAM 2");
-        team3Txt.setText("TEAM 3");
         scoreTxtT1.setText("0");
         scoreTxtT2.setText("0");
         scoreTxtT3.setText("0");
@@ -629,50 +502,12 @@ public class MainActivity extends AppCompatActivity {
         navTxtT1.setText("0");
         navTxtT2.setText("0");
         navTxtT3.setText("0");
-
-        if(getTeams().equals("")) {
-            stringArrayList.set(0,"Team #1");
-            stringArrayList.set(1,"Team #2");
-            stringArrayList.set(2,"Team #3");
-            mAdapter = new RecyclerViewAdapter(stringArrayList);
-            ItemTouchHelper.Callback callback = new ItemMoveCallback(mAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-            touchHelper.attachToRecyclerView(recyclerView);
-            recyclerView.setAdapter(mAdapter);
-        } //NEED TO ADD AUTO FILL LOGIC
-
         commentT1.setText("");
         commentT2.setText("");
-        commentT3.setText("");
         commentT1.setHint("Team 1 Notes:");
         commentT2.setHint("Team 2 Notes:");
-        commentT3.setHint("Team 3 Notes:");
         round += 1;
         match.setText(String.valueOf(round));
-
-
-
-
-    }
-
-
-
-    private void ColorView() {
-        if (alliance_sel.getSelectedItem().toString().equals("BLUE")) {
-            for(int i=0;i<3;i++) {
-                CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
-                relativeLayout.setBackgroundColor(Color.BLUE);
-                TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
-                textView.setTextColor(Color.WHITE);
-            }
-        } else if (alliance_sel.getSelectedItem().toString().equals("RED")) {
-            for(int i=0;i<3;i++) {
-                CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
-                relativeLayout.setBackgroundColor(Color.RED);
-                TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
-                textView.setTextColor(Color.WHITE);
-            }
-        }
     }
 
     private void modScore(TextView team,boolean minus) {
@@ -706,14 +541,50 @@ public class MainActivity extends AppCompatActivity {
 
         return text.toString();
     }
+    public void textColorChange(String color) {
+        if(Objects.equals(color, "blue")) {
+            inputTeams.setTextColor(getResources().getColor(R.color.NewBlue));
+            team1Txt.setTextColor(getResources().getColor(R.color.NewBlue));
+            team2Txt.setTextColor(getResources().getColor(R.color.NewBlue));
+            alliance_sel.setBackgroundColor(getResources().getColor(R.color.NewBlue));
+            playDefTxt.setTextColor(getResources().getColor(R.color.NewBlue));
+            driverTxt.setTextColor(getResources().getColor(R.color.NewBlue));
+            worstTxt.setTextColor(getResources().getColor(R.color.NewBlue));
+            bestTxt.setTextColor(getResources().getColor(R.color.NewBlue));
+            team1Txt2.setTextColor(getResources().getColor(R.color.NewBlue));
+            team2Txt2.setTextColor(getResources().getColor(R.color.NewBlue));
+            team1Op.setBackgroundColor(Color.BLUE);
+            team2Op.setBackgroundColor(Color.BLUE);
+            team3Op.setBackgroundColor(Color.BLUE);
+
+        } else if (Objects.equals(color, "red")) {
+            inputTeams.setTextColor(getResources().getColor(R.color.NewRed));
+            team1Txt.setTextColor(getResources().getColor(R.color.NewRed));
+            team2Txt.setTextColor(getResources().getColor(R.color.NewRed));
+            alliance_sel.setBackgroundColor(getResources().getColor(R.color.NewRed));
+            playDefTxt.setTextColor(getResources().getColor(R.color.NewRed));
+            driverTxt.setTextColor(getResources().getColor(R.color.NewRed));
+            worstTxt.setTextColor(getResources().getColor(R.color.NewRed));
+            bestTxt.setTextColor(getResources().getColor(R.color.NewRed));
+            team1Txt2.setTextColor(getResources().getColor(R.color.NewRed));
+            team2Txt2.setTextColor(getResources().getColor(R.color.NewRed));
+            team1Op.setBackgroundColor(Color.RED);
+            team2Op.setBackgroundColor(Color.RED);
+            team3Op.setBackgroundColor(Color.RED);
+        }
+    }
+
 
     public void onBackPressed() {}
 
     private void autoFill() {
         if(!getTeams().equals("")) {
+            team1Op.setVisibility(View.VISIBLE);
+            team2Op.setVisibility(View.VISIBLE);
+            team3Op.setVisibility(View.VISIBLE);
             team1.setEnabled(false);
             team2.setEnabled(false);
-            team3.setEnabled(false);
+
             String[] tempIntArr;
             String[] splittempIntArr;
             tempIntArr = getTeams().split("\n");
@@ -722,9 +593,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (alliance_sel.getSelectedItem().toString().equals("RED")) {
                 try {
-                    team1.setText(splittempIntArr[0]);
-                    team2.setText(splittempIntArr[1]);
-                    team3.setText(splittempIntArr[2]);
+                    team1Op.setText(splittempIntArr[0]);
+                    team2Op.setText(splittempIntArr[1]);
+                    team3Op.setText(splittempIntArr[2]);
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
@@ -733,9 +604,9 @@ public class MainActivity extends AppCompatActivity {
 
             } else if (alliance_sel.getSelectedItem().toString().equals("BLUE")) {
                 try {
-                    team1.setText(splittempIntArr[3]);
-                    team2.setText(splittempIntArr[4]);
-                    team3.setText(splittempIntArr[5]);
+                    team1Op.setText(splittempIntArr[3]);
+                    team2Op.setText(splittempIntArr[4]);
+                    team3Op.setText(splittempIntArr[5]);
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
@@ -757,46 +628,4 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-
-    public void rankUpdate() {
-        if(!team1.getText().toString().equals("") && !team2.getText().toString().equals("") && !team3.getText().toString().equals("")) {
-            stringArrayList.set(0,team1.getText().toString());
-            stringArrayList.set(1,team2.getText().toString());
-            stringArrayList.set(2,team3.getText().toString());
-
-            commentT1.setHint(team1.getText().toString()+" Notes:");
-            commentT2.setHint(team2.getText().toString()+" Notes:");
-            commentT3.setHint(team3.getText().toString()+" Notes:");
-
-            team1Txt.setText(team1.getText().toString());
-            team2Txt.setText(team2.getText().toString());
-            team3Txt.setText(team3.getText().toString());
-
-
-
-            for(int i = 0; i<3; i++) {
-                CardView relativeLayout = (CardView) recyclerView.getChildAt(i);
-                TextView textView = (TextView) relativeLayout.findViewById(R.id.txtTitle);
-                textView.setText(stringArrayList.get(i));
-            }
-
-        }
-    }
-
-    private void populateRecyclerView() {
-
-        stringArrayList.add("TEAM #1");
-        stringArrayList.add("TEAM #2");
-        stringArrayList.add("TEAM #3");
-
-        mAdapter = new RecyclerViewAdapter(stringArrayList);
-
-        ItemTouchHelper.Callback callback = new ItemMoveCallback(mAdapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.setAdapter(mAdapter);
-    }
-
-
 }

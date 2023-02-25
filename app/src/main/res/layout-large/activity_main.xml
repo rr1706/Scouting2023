@@ -287,52 +287,6 @@
         app:layout_constraintStart_toEndOf="@+id/notes"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
 
-    <ImageView
-        android:id="@+id/btnPlus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="164dp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintStart_toEndOf="@+id/autoChange"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/plus" />
-
-    <ImageView
-        android:id="@+id/btnMinus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintStart_toEndOf="@+id/autoChange"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/minus" />
-
-    <TextView
-        android:id="@+id/missedScore"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="36dp"
-        android:gravity="center"
-        android:text="0"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/btnPlus"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/btnMinus"
-        app:layout_constraintTop_toBottomOf="@+id/missedIntakeTXTV" />
-
-    <TextView
-        android:id="@+id/missedIntakeTXTV"
-        android:layout_width="150dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="20dp"
-        android:text="Missed Intakes"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/btnPlus"
-        app:layout_constraintStart_toStartOf="@+id/btnMinus"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/notes"
         android:layout_width="194dp"
@@ -540,5 +494,16 @@
         app:layout_constraintStart_toEndOf="@+id/endgameSpinner"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout"
         tools:visibility="visible" />
+
+    <CheckBox
+        android:id="@+id/playedDefense"
+        android:layout_width="144dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="40dp"
+        android:text="Played Defense"
+        android:textSize="28sp"
+        app:layout_constraintStart_toEndOf="@+id/autoChange"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
