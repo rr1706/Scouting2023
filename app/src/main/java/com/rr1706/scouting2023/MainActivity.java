@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         dummyTeam = findViewById(R.id.dummyTeam);
@@ -643,7 +643,6 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.println("Defense Score: ");
                     myOutWriter.println("Quickness Load: ");
                     myOutWriter.println("Quickness Score: ");
-                    myOutWriter.println("Defense navigation: ");
                     myOutWriter.println("Team Order: ");
                     myOutWriter.println("Comments: ");
 

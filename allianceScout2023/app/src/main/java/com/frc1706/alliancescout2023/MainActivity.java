@@ -50,7 +50,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     int round = 1;
-    SeekBar defSeekTeam1,defSeekTeam2;
+    SeekBar defSeekTeam1,defSeekTeam2,driverAbility1,driverAbility2;
     CheckBox defChkTeam1,defChkTeam2,defChkTeam3;
 
 
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -129,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
         team1Txt2 = findViewById(R.id.team1EditTxt2);
         team2Txt2 = findViewById(R.id.team2EditTxt2);
 
+        driverAbility1 = findViewById(R.id.driverAbility1);
+        driverAbility2 = findViewById(R.id.driverAbility2);
+
 
         //Buttons
         submit = findViewById(R.id.submit);
@@ -160,25 +164,20 @@ public class MainActivity extends AppCompatActivity {
                 1);
 
         Log.e("NUMB", String.valueOf(tabletnumber));
+
+
         if(tabletnumber==8) {
             alliance_sel.setSelection(2);
             for (View line : lines) {
                 line.setBackgroundColor(Color.RED);
             }
-
             textColorChange("red");
-
-
-
         } else if(tabletnumber==9) {
             alliance_sel.setSelection(1);
             for (View line : lines) {
                 line.setBackgroundColor(Color.BLUE);
             }
-
-
             textColorChange("blue");
-
         }
 
         autoFill();
@@ -208,37 +207,42 @@ public class MainActivity extends AppCompatActivity {
         quickLoadMinusT1.setOnClickListener(v-> modScore(loadTxtT1,true));
         quickLoadMinusT2.setOnClickListener(v-> modScore(loadTxtT2,true));
 
-        team1Op.setOnClickListener(v -> {
-            if(team1Op.isChecked()) {
-                team1Op.setTextSize((float) 24.0);
-            }else {
-                team1Op.setTextSize((float) 14.0);
 
-            }
-        });
 
-        team2Op.setOnClickListener(v -> {
-            if(team2Op.isChecked()) {
-                team2Op.setTextSize((float) 24.0);
-            } else {
-                team2Op.setTextSize((float) 14.0);
 
-            }
-        });
+        team1Op.setOnClickListener(v -> populateTeams(team1Op));
+        team2Op.setOnClickListener(v -> populateTeams(team2Op));
+        team3Op.setOnClickListener(v -> populateTeams(team3Op));
 
-        team3Op.setOnClickListener(v -> {
-            if(team3Op.isChecked()) {
-                team3Op.setTextSize((float) 24.0);
-            }else {
-                team3Op.setTextSize((float) 14.0);
 
-            }
-        });
+
 
 
         match.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+
+                team1.setText("");
+                team2.setText("");
+                team1.setHint("Team 1");
+                team2.setHint("Team 2");
+                team2Txt.setText("Team 2");
+                team1Txt.setText("Team 1");
+                team2Txt2.setText("Team 2");
+                team1Txt2.setText("Team 1");
+                commentT2.setHint("Team 2 Notes");
+                commentT1.setHint("Team 1 Notes");
+                team1Op.setEnabled(true);
+                team2Op.setEnabled(true);
+                team3Op.setEnabled(true);
+                team1Op.setChecked(false);
+                team2Op.setChecked(false);
+                team3Op.setChecked(false);
+                team1Op.setTextSize((float) 18);
+                team2Op.setTextSize((float) 18);
+                team3Op.setTextSize((float) 18);
+
+
                 autoFill();
 
             }
@@ -357,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.println("Tele Top: " );
                     myOutWriter.println("Tele Middle: " );
                     myOutWriter.println("Tele Bottom: " );
-                    myOutWriter.println("Missed Intakes: ");
+                    myOutWriter.println("Played Defense: ");
                     myOutWriter.println("Top Array: ");
                     myOutWriter.println("Middle Array: " );
                     myOutWriter.println("Bottom Array: ");
@@ -379,15 +383,7 @@ public class MainActivity extends AppCompatActivity {
                     //Score of Quickness Score
                     myOutWriter.println("Quickness Score: " + scoreTxtT1.getText().toString());
 
-                    //Score of Defense Navigation
-                    myOutWriter.println("Defense navigation: " + navTxtT1.getText().toString());
-
-                    for(int i=0;i<3;i++) {
-                        if(Objects.equals(strings[i], team1.getText().toString())) {
-                            myOutWriter.println("Team Order: " + strings[i]);
-                            break;
-                        }
-                    }
+                    myOutWriter.println("Team Order: " + driverAbility1.getProgress());
                     //Comments of Team
                     myOutWriter.println("Comments: " + commentT1.getText().toString());
 
@@ -435,18 +431,7 @@ public class MainActivity extends AppCompatActivity {
                     //Score of Quickness Score
                     myOutWriter.println("Quickness Score: " + scoreTxtT2.getText().toString());
 
-                    //Score of Defense Navigation
-                    myOutWriter.println("Defense navigation: " + navTxtT2.getText().toString());
-
-                    //Order of teams
-
-                    for(int i=0;i<3;i++) {
-                        if(Objects.equals(strings[i], team2.getText().toString())) {
-                            myOutWriter.println("Team Order: " + strings[i]);
-                            break;
-                        }
-                    }
-
+                    myOutWriter.println("Team Order: " + driverAbility2.getProgress());
                     //Comments of Team
                     myOutWriter.println("Comments: " + commentT2.getText().toString());
 
@@ -467,26 +452,86 @@ public class MainActivity extends AppCompatActivity {
 
                 alliance_sel.setBackground(spinnerbackground);
                 scouter.setText(sameScouter);
-
+                autoFill();
 
             }
         });
 
     }
+    private void populateTeams(ToggleButton button) {
+        //DISABLE
+        if(team1Op.isChecked() && team2Op.isChecked()) {
+            team3Op.setEnabled(false);
+        } else if(team1Op.isChecked() && team3Op.isChecked()) {
+            team2Op.setEnabled(false);
+        } else if (team2Op.isChecked() && team3Op.isChecked()) {
+            team1Op.setEnabled(false);
+        }
 
+        if(team1Op.isChecked() && !team2Op.isChecked() && !team3Op.isChecked()) {
+            team2Op.setEnabled(true);
+            team3Op.setEnabled(true);
+        } else if(!team1Op.isChecked() && team2Op.isChecked() && !team3Op.isChecked()) {
+            team1Op.setEnabled(true);
+            team3Op.setEnabled(true);
+        } else if(!team1Op.isChecked() && !team2Op.isChecked() && team3Op.isChecked()) {
+            team2Op.setEnabled(true);
+            team1Op.setEnabled(true);
+        }
+
+
+
+            if(button.isChecked()) {
+                button.setTextSize((float) 24.0);
+
+                if(team1Txt.getText().toString().equals("Team 1") && !team2Txt.getText().toString().equals(button.getText().toString())) {
+
+                    team1Txt.setText(button.getText().toString());
+                    team1Txt2.setText(button.getText().toString());
+                    team1.setText(button.getText().toString());
+                    team1.setEnabled(false);
+                    commentT1.setHint(button.getText().toString()+" Notes");
+
+                } else if(team2Txt.getText().toString().equals("Team 2")) {
+                    team2Txt.setText(button.getText().toString());
+                    team2Txt2.setText(button.getText().toString());
+                    team2.setText(button.getText().toString());
+                    team2.setEnabled(false);
+                    commentT2.setHint(button.getText().toString()+" Notes");
+                }
+
+
+            }else {
+                button.setTextSize((float) 18.0);
+
+                if(team1Txt.getText().toString().equals(button.getText().toString())) {
+                    team1Txt.setText("Team 1");
+                    team1Txt2.setText("Team 1");
+                    team1.setHint("Team 1");
+                    team1.setText("");
+                    team1.setEnabled(true);
+
+                    commentT1.setHint("Team 1 Notes");
+                } else if(team2Txt.getText().toString().equals(button.getText().toString())) {
+                    team2Txt.setText("Team 2");
+                    team2Txt2.setText("Team 2");
+                    team2.setHint("Team 2");
+                    team2.setText("");
+                    team2.setEnabled(true);
+                    commentT2.setHint("Team 2 Notes");
+                }
+            }
+    }
 
     private void resetVars() {
         team1.setEnabled(true);
         team2.setEnabled(true);
-        team3.setEnabled(true);
         scouter.setText("");
         match.setText("");
         team1.setText("");
         team2.setText("");
-        team3.setText("");
         defChkTeam1.setChecked(false);
         defChkTeam2.setChecked(false);
-        defChkTeam3.setChecked(false);
         defSeekTeam1.setProgress(0);
         defSeekTeam2.setProgress(0);
         defSeekTeam1.setVisibility(View.INVISIBLE);
@@ -495,19 +540,26 @@ public class MainActivity extends AppCompatActivity {
         team2Txt.setText("TEAM 2");
         scoreTxtT1.setText("0");
         scoreTxtT2.setText("0");
-        scoreTxtT3.setText("0");
         loadTxtT1.setText("0");
         loadTxtT2.setText("0");
-        loadTxtT3.setText("0");
-        navTxtT1.setText("0");
-        navTxtT2.setText("0");
-        navTxtT3.setText("0");
         commentT1.setText("");
         commentT2.setText("");
         commentT1.setHint("Team 1 Notes:");
         commentT2.setHint("Team 2 Notes:");
+        team1Op.setChecked(false);
+        team2Op.setChecked(false);
+        team3Op.setChecked(false);
+        team1Op.setEnabled(true);
+        team2Op.setEnabled(true);
+        team3Op.setEnabled(true);
+        team1Op.setTextSize((float) 18);
+        team2Op.setTextSize((float) 18);
+        team3Op.setTextSize((float) 18);
         round += 1;
         match.setText(String.valueOf(round));
+        driverAbility1.setProgress(0);
+        driverAbility2.setProgress(0);
+
     }
 
     private void modScore(TextView team,boolean minus) {
@@ -541,6 +593,7 @@ public class MainActivity extends AppCompatActivity {
 
         return text.toString();
     }
+
     public void textColorChange(String color) {
         if(Objects.equals(color, "blue")) {
             inputTeams.setTextColor(getResources().getColor(R.color.NewBlue));
@@ -556,6 +609,9 @@ public class MainActivity extends AppCompatActivity {
             team1Op.setBackgroundColor(Color.BLUE);
             team2Op.setBackgroundColor(Color.BLUE);
             team3Op.setBackgroundColor(Color.BLUE);
+            team1Op.setTextColor(Color.WHITE);
+            team2Op.setTextColor(Color.WHITE);
+            team3Op.setTextColor(Color.WHITE);
 
         } else if (Objects.equals(color, "red")) {
             inputTeams.setTextColor(getResources().getColor(R.color.NewRed));
@@ -571,9 +627,13 @@ public class MainActivity extends AppCompatActivity {
             team1Op.setBackgroundColor(Color.RED);
             team2Op.setBackgroundColor(Color.RED);
             team3Op.setBackgroundColor(Color.RED);
+
+            team1Op.setTextColor(Color.WHITE);
+            team2Op.setTextColor(Color.WHITE);
+            team3Op.setTextColor(Color.WHITE);
+
         }
     }
-
 
     public void onBackPressed() {}
 
@@ -596,6 +656,12 @@ public class MainActivity extends AppCompatActivity {
                     team1Op.setText(splittempIntArr[0]);
                     team2Op.setText(splittempIntArr[1]);
                     team3Op.setText(splittempIntArr[2]);
+                    team1Op.setTextOn(splittempIntArr[0]);
+                    team2Op.setTextOn(splittempIntArr[1]);
+                    team3Op.setTextOn(splittempIntArr[2]);
+                    team1Op.setTextOff(splittempIntArr[0]);
+                    team2Op.setTextOff(splittempIntArr[1]);
+                    team3Op.setTextOff(splittempIntArr[2]);
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
@@ -607,7 +673,12 @@ public class MainActivity extends AppCompatActivity {
                     team1Op.setText(splittempIntArr[3]);
                     team2Op.setText(splittempIntArr[4]);
                     team3Op.setText(splittempIntArr[5]);
-
+                    team1Op.setTextOn(splittempIntArr[3]);
+                    team2Op.setTextOn(splittempIntArr[4]);
+                    team3Op.setTextOn(splittempIntArr[5]);
+                    team1Op.setTextOff(splittempIntArr[3]);
+                    team2Op.setTextOff(splittempIntArr[4]);
+                    team3Op.setTextOff(splittempIntArr[5]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
