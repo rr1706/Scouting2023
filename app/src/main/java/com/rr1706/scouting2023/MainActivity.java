@@ -847,7 +847,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        if ((autoTop + autoMid + autoLow >= 2) && Objects.equals(mode, "auto")) {
+        if ((autoTop + autoMid + autoLow >= 2) && Objects.equals(mode, "auto") && grid[row][column] == 0) {
             popup.setMessage("Are you supposed to be in Auto still?")
                     .setPositiveButton("Yes",AutoEnd)
                     .setNegativeButton("No",AutoEnd)
