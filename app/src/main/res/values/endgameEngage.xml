@@ -3,6 +3,7 @@
     <string-array name="endgameEngage">
         <item>No Input</item>
         <item>NONE</item>
+        <item>FAILED</item>
         <item>PARKED</item>
         <item>DOCKED</item>
         <item>ENGAGED</item>

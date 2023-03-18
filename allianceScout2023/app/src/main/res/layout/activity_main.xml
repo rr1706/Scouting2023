@@ -11,6 +11,93 @@
     android:focusableInTouchMode="true"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/scoreT1List"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/team1timerScore"
+        app:layout_constraintEnd_toEndOf="@+id/undoLastScoreT2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/startTimerScoreT2" />
+
+    <Button
+        android:id="@+id/startTimerScoreT1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:text="Start"
+        app:layout_constraintEnd_toStartOf="@+id/textView6"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/team2timerScore"
+        android:layout_width="75dp"
+        android:layout_height="21dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:text="0.0"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/undoLastScoreT2"
+        app:layout_constraintEnd_toEndOf="@+id/undoLastScoreT2"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/startTimerScoreT2" />
+
+    <Button
+        android:id="@+id/undoLastScoreT1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Undo"
+        app:layout_constraintEnd_toEndOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/team1timer" />
+
+    <TextView
+        android:id="@+id/ScoreT2List"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/team2timerScore"
+        app:layout_constraintEnd_toEndOf="@+id/undoLastScoreT2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/startTimerScoreT2" />
+
+    <TextView
+        android:id="@+id/team1timerScore"
+        android:layout_width="75dp"
+        android:layout_height="21dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="0.0"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/startTimerT1"
+        app:layout_constraintEnd_toEndOf="@+id/undoLastScoreT2"
+        app:layout_constraintStart_toStartOf="@+id/startTimerScoreT2" />
+
+    <Button
+        android:id="@+id/startTimerScoreT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="224dp"
+        android:text="Start"
+        app:layout_constraintEnd_toStartOf="@+id/textView6"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <Button
+        android:id="@+id/undoLastScoreT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="164dp"
+        android:text="Undo"
+        app:layout_constraintEnd_toEndOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/team1timer" />
+
     <ImageView
         android:id="@+id/rrlogo"
         android:layout_width="110dp"
@@ -96,15 +183,16 @@
 
     <Button
         android:id="@+id/submit"
-        android:layout_width="154dp"
-        android:layout_height="58dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="168dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="24dp"
         android:text="Submit"
         android:textSize="29sp"
         app:backgroundTint="@color/design_default_color_secondary_variant"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/undoLastScoreT2"
+        app:layout_constraintStart_toStartOf="@+id/startTimerScoreT2"
+        app:layout_constraintTop_toBottomOf="@+id/undoLastScoreT2" />
 
     <TextView
         android:id="@+id/inputTeamsTxt"
@@ -124,14 +212,13 @@
         android:id="@+id/playDefTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="164dp"
         android:text="Played Defense"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/team1DefSEEK"
-        app:layout_constraintEnd_toStartOf="@+id/team1DefCK"
-        app:layout_constraintHorizontal_bias="0.542"
-        app:layout_constraintStart_toEndOf="@+id/inputTeamsTxt"
-        app:layout_constraintTop_toBottomOf="@+id/alliance_input"
-        app:layout_constraintVertical_bias="0.752" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.845"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/playDefTxt2"
@@ -140,47 +227,10 @@
         android:layout_marginTop="292dp"
         android:text="Played Defense"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/team1DefCK"
+        app:layout_constraintEnd_toEndOf="@+id/playDefTxt"
         app:layout_constraintHorizontal_bias="0.542"
-        app:layout_constraintStart_toEndOf="@+id/inputTeamsTxt"
+        app:layout_constraintStart_toStartOf="@+id/playDefTxt"
         app:layout_constraintTop_toBottomOf="@+id/alliance_input" />
-
-    <Button
-        android:id="@+id/minusTeam2Score"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="110dp"
-        android:background="@color/design_default_color_error"
-        android:text="-"
-        app:backgroundTint="@color/design_default_color_error"
-        app:layout_constraintBottom_toBottomOf="@+id/textTeam2Score"
-        app:layout_constraintEnd_toStartOf="@+id/plusTeam2Score"
-        app:layout_constraintTop_toTopOf="@+id/textTeam2Score" />
-
-    <TextView
-        android:id="@+id/textTeam2Score"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:text="0"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/plusTeam2Score"
-        app:layout_constraintStart_toEndOf="@+id/minusTeam2Score"
-        app:layout_constraintTop_toBottomOf="@+id/line7" />
-
-    <Button
-        android:id="@+id/plusTeam2Score"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:background="@color/green"
-        android:text="+"
-        app:backgroundTint="@color/green"
-        app:layout_constraintBottom_toBottomOf="@+id/textTeam2Score"
-        app:layout_constraintEnd_toEndOf="@+id/plusTeam1Score"
-        app:layout_constraintStart_toStartOf="@+id/plusTeam1Score"
-        app:layout_constraintTop_toTopOf="@+id/textTeam2Score" />
 
     <View
         android:id="@+id/line6"
@@ -191,30 +241,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/team1"
         app:layout_constraintTop_toBottomOf="@+id/team2" />
-
-    <TextView
-        android:id="@+id/driverTxt"
-        android:layout_width="181dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="26dp"
-        android:text="Driver Ability Rank"
-        android:textColor="@color/white"
-        android:textSize="22dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line4" />
-
-    <TextView
-        android:id="@+id/driverTxt2"
-        android:layout_width="181dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="224dp"
-        android:text="Driver Ability Rank"
-        android:textColor="@color/white"
-        android:textSize="22dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line4" />
 
     <EditText
 
@@ -248,12 +274,13 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="176dp"
         android:text="Quickness to Load"
         android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/team1DefCK"
-        app:layout_constraintTop_toBottomOf="@+id/team2Op" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.338"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
         android:id="@+id/team2DefCK"
@@ -270,13 +297,14 @@
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="242dp"
         android:layout_height="45dp"
-        android:layout_marginStart="236dp"
         android:layout_marginTop="204dp"
         android:background="@drawable/seekbar"
         android:max="4"
         android:progress="0"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/team2DefCK"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintStart_toStartOf="@+id/playDefTxt2"
         app:layout_constraintTop_toTopOf="@+id/team1"
         tools:visibility="visible" />
 
@@ -284,10 +312,10 @@
         android:id="@+id/team1DefCK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        app:layout_constraintEnd_toStartOf="@+id/team2Op"
-        app:layout_constraintHorizontal_bias="0.58"
-        app:layout_constraintStart_toEndOf="@+id/team1Op"
+        android:layout_marginTop="84dp"
+        app:layout_constraintEnd_toEndOf="@+id/team1DefSEEK"
+        app:layout_constraintHorizontal_bias="0.711"
+        app:layout_constraintStart_toStartOf="@+id/team1DefSEEK"
         app:layout_constraintTop_toBottomOf="@+id/line2" />
 
     <EditText
@@ -311,30 +339,46 @@
         android:id="@+id/line12"
         android:layout_width="3dp"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
         android:background="#EFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/undoLastT2"
-        app:layout_constraintEnd_toStartOf="@+id/minusTeam1Score"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/LoadT2List"
-        app:layout_constraintTop_toTopOf="@+id/minusTeam1Score"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toStartOf="@+id/startTimerScoreT1"
+        app:layout_constraintStart_toEndOf="@+id/undoLastT1"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <View
+        android:id="@+id/line5"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:background="#EFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/undoLastT2"
+        app:layout_constraintEnd_toStartOf="@+id/startTimerT1"
+        app:layout_constraintStart_toEndOf="@+id/team1"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <View
+        android:id="@+id/line9"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:background="#EFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/undoLastT2"
+        app:layout_constraintEnd_toStartOf="@+id/driverAbility1"
+        app:layout_constraintStart_toEndOf="@+id/ScoreT2List"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/team1Notes"
         android:layout_width="187dp"
         android:layout_height="43dp"
-        android:layout_marginStart="264dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Team 1 Notes"
         android:inputType="textPersonName"
         android:maxLength="120"
         android:textColor="@color/white"
         android:textColorHint="@color/gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/driverAbility1"
-        app:layout_constraintTop_toBottomOf="@+id/textTeam1Score" />
+        app:layout_constraintEnd_toEndOf="@+id/team1"
+        app:layout_constraintStart_toStartOf="@+id/team1"
+        app:layout_constraintTop_toBottomOf="@+id/team1" />
 
     <View
         android:id="@+id/line8"
@@ -350,7 +394,7 @@
         android:id="@+id/team2Notes"
         android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="Team 2 Notes"
         android:inputType="textPersonName"
@@ -360,7 +404,7 @@
         app:layout_constraintEnd_toEndOf="@+id/line8"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/line8"
-        app:layout_constraintTop_toBottomOf="@+id/textTeam2Score" />
+        app:layout_constraintTop_toBottomOf="@+id/team2" />
 
     <View
         android:id="@+id/line7"
@@ -384,68 +428,31 @@
         app:layout_constraintTop_toBottomOf="@+id/team1DefSEEK"
         app:layout_constraintVertical_bias="0.546" />
 
-    <Button
-        android:id="@+id/plusTeam1Score"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/green"
-        android:text="+"
-        app:backgroundTint="@color/green"
-        app:layout_constraintBottom_toBottomOf="@+id/textTeam1Score"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textTeam1Score" />
-
-    <Button
-        android:id="@+id/minusTeam1Score"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="50dp"
-        android:background="@color/design_default_color_error"
-        android:text="-"
-        app:backgroundTint="@color/design_default_color_error"
-        app:layout_constraintBottom_toBottomOf="@+id/textTeam1Score"
-        app:layout_constraintStart_toEndOf="@+id/LoadT1List"
-        app:layout_constraintTop_toTopOf="@+id/textTeam1Score"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/textTeam1Score"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="0"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/plusTeam1Score"
-        app:layout_constraintStart_toEndOf="@+id/minusTeam1Score"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="120dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="180dp"
         android:text="Quickness to Score"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/plusTeam1Score"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toStartOf="@+id/minusTeam1Score"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.623"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
         android:id="@+id/team1DefSEEK"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="242dp"
         android:layout_height="45dp"
-        android:layout_marginStart="236dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/seekbar"
         android:max="4"
         android:progress="0"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/playDefTxt"
+        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintStart_toStartOf="@+id/playDefTxt"
         app:layout_constraintTop_toTopOf="@+id/team1"
         tools:visibility="visible" />
 
@@ -501,11 +508,11 @@
         android:id="@+id/driverAbility1"
         android:layout_width="242dp"
         android:layout_height="65dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/seekbar2"
-        android:max="2"
-        app:layout_constraintStart_toEndOf="@+id/driverTxt"
+        android:max="4"
+        app:layout_constraintEnd_toEndOf="@+id/team1DefSEEK"
+        app:layout_constraintStart_toStartOf="@+id/team1DefSEEK"
         app:layout_constraintTop_toBottomOf="@+id/team1DefSEEK" />
 
     <SeekBar
@@ -514,9 +521,11 @@
         android:layout_height="65dp"
         android:layout_marginStart="240dp"
         android:background="@drawable/seekbar2"
-        android:max="2"
+        android:max="4"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/team2DefSEEK"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/team2DefSEEK"
         app:layout_constraintTop_toBottomOf="@+id/team2DefSEEK"
         app:layout_constraintVertical_bias="0.146" />
 
@@ -544,20 +553,20 @@
         android:id="@+id/startTimerT1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="72dp"
         android:text="Start"
-        app:layout_constraintStart_toEndOf="@+id/driverAbility1"
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/startTimerT2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:text="Start"
         app:layout_constraintBottom_toBottomOf="@+id/undoLastT2"
-        app:layout_constraintStart_toEndOf="@+id/driverAbility1" />
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/team1timer"
@@ -587,20 +596,20 @@
         android:id="@+id/undoLastT1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:text="Undo"
-        app:layout_constraintStart_toEndOf="@+id/team2Op"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/team1timer" />
 
     <Button
         android:id="@+id/undoLastT2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="188dp"
+        android:layout_marginTop="164dp"
         android:text="Undo"
-        app:layout_constraintStart_toEndOf="@+id/team2Op"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/team1timer" />
 
     <TextView

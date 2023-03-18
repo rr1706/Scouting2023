@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox teamAutofill,playedDefense;
     TextView allianceText,dummyTeam,endgameHide;
     Switch robotError;
+    RadioGroup startLocation;
+    RadioButton bumpStart,middleStart,flankStart;
 
     int teleTop;
     int teleMid;
@@ -59,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
     int autoTop;
     int autoMid;
     int autoLow;
-
+    int seconds = 0;
     int roundfill = 1;
-    int ds_cooldown = 0;
+    boolean CountDown = false;
     int missedIntake = 0;
     String tabletName;
     int tabletnumber;
@@ -143,6 +148,12 @@ public class MainActivity extends AppCompatActivity {
         both6 = findViewById(R.id.both6);
         both7 = findViewById(R.id.both7);
         both8 = findViewById(R.id.both8);
+
+        startLocation = findViewById(R.id.startLocation);
+        bumpStart = findViewById(R.id.bumpStart);
+        middleStart = findViewById(R.id.middleStart);
+        flankStart = findViewById(R.id.flankStart);
+
         ImageView[][] imArray = {{cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5},{cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11},{both0,both1,both2,both3,both4,both5,both6,both7,both8}};
 
         ActivityCompat.requestPermissions(this,
@@ -254,14 +265,16 @@ public class MainActivity extends AppCompatActivity {
                 closeError += " No Name,";
                 name_input.setBackgroundColor(Color.argb(255, 255, 255, 0));
             }
+            if (startLocation.getCheckedRadioButtonId() == -1) {
+                closeError += " No Start Location,";
+                startLocation.setBackgroundColor(Color.argb(255, 255, 255, 0));
+            }
             if (!closeError.equals("")) {
                 closeError = closeError.substring(0, closeError.length() - 1) + ".";
             }
             if (!(closeError.equals(""))) {
                 Toast.makeText(getApplicationContext(), "Submit Error:" + closeError, Toast.LENGTH_LONG).show();
-                data_submitted.setVisibility(View.VISIBLE);
-                data_submitted.setImageResource(R.drawable.x);
-                ds_cooldown = 1500;
+
             } else {
                 Pregame.setVisibility(View.INVISIBLE);
                 Gray_Box.setVisibility(View.INVISIBLE);
@@ -291,27 +304,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-        Runnable myRunnable = () -> {
-            while (true) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {}
-                //This is just the big check or X if people submit data.
-                data_submitted.post(() -> {
-                            //data_submitted stuff
-                            if (ds_cooldown > 0) {
-                                ds_cooldown--;
-                            }
-                            if (ds_cooldown == 0) {
-                                data_submitted.setVisibility(View.GONE);
-                            }
-                        });
-            }
-        };
-
-        Thread myThread = new Thread(myRunnable);
-        myThread.start();
 
 
         both0.setOnClickListener(v-> arrayUpdate(2,0,R.id.both0));
@@ -362,17 +354,12 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         Toast.makeText(getApplicationContext(), "Data Submission Failed! (Tell scouting)", Toast.LENGTH_SHORT).show();
                         Log.e("Exception", "File write failed: " + e);
-                        data_submitted.setImageResource(R.drawable.x);
-                        data_submitted.setVisibility(View.VISIBLE);
                     }
                     allianceText.setBackgroundColor(Color.TRANSPARENT);
                     round_input.setBackground(textBackground);
                     team_input.setBackground(textBackground);
                     name_input.setBackground(nameBackground);
-                    if (ds_cooldown == 0) {
-                        data_submitted.setImageResource(R.drawable.check);
-                        data_submitted.setVisibility(View.VISIBLE);
-                    }
+
                     resetVars();
                     teamAuto();
 
@@ -423,9 +410,6 @@ public class MainActivity extends AppCompatActivity {
             }
             if (!(submitError.equals(""))) {
                 Toast.makeText(getApplicationContext(), "Submit Error:" + submitError, Toast.LENGTH_LONG).show();
-                data_submitted.setVisibility(View.VISIBLE);
-                data_submitted.setImageResource(R.drawable.x);
-                ds_cooldown = 1500;
             } else {
                 builder.setMessage("Are you sure the team is a no show?")
                         .setPositiveButton("Yes", NoShowDialog)
@@ -454,6 +438,10 @@ public class MainActivity extends AppCompatActivity {
                     closeError += " No Name,";
                     name_input.setBackgroundColor(Color.argb(255, 255, 255, 0));
                 }
+                if (startLocation.getCheckedRadioButtonId() == -1) {
+                    closeError += " No Start Location,";
+                    startLocation.setBackgroundColor(Color.argb(255, 255, 255, 0));
+                }
                 if (!closeError.equals("")) {
                     closeError = closeError.substring(0, closeError.length() - 1) + ".";
                 }
@@ -461,9 +449,6 @@ public class MainActivity extends AppCompatActivity {
                 if (!(closeError.equals(""))) {
                     Toast.makeText(getApplicationContext(), "Submit Error:" + closeError, Toast.LENGTH_LONG).show();
 
-                    data_submitted.setVisibility(android.view.View.VISIBLE);
-                    data_submitted.setImageResource(R.drawable.x);
-                    ds_cooldown = 1500;
                 } else {
                     Pregame.setVisibility(android.view.View.INVISIBLE);
                     Gray_Box.setVisibility(android.view.View.INVISIBLE);
@@ -587,24 +572,20 @@ public class MainActivity extends AppCompatActivity {
             if (!(submitError.equals(""))) {
                 Toast.makeText(getApplicationContext(), "Submit Error:" + submitError, Toast.LENGTH_LONG).show();
                 //Place an X if incorrect
-                data_submitted.setVisibility(View.VISIBLE);
-                data_submitted.setImageResource(R.drawable.x);
-                ds_cooldown = 1500;
+
                 if (Pregame.getVisibility() != View.VISIBLE) {
                     Gray_Box.setVisibility(View.INVISIBLE);
                 }
 
             } else {
                 //This is what happens whenever all is correct
-                data_submitted.setVisibility(View.VISIBLE);
-                data_submitted.setImageResource(R.drawable.check);
                 team_input.setBackground(textBackground);
                 round_input.setBackground(textBackground);
                 name_input.setBackground(nameBackground);
                 allianceText.setBackgroundColor(Color.TRANSPARENT);
                 AutoEngage.setBackground(spinnerbackground);
                 EndgameEngage.setBackground(spinnerbackground);
-                ds_cooldown = 1500; //Makes the check mark appear
+
 
                 //Save data for transfer
                 File dir = getDataDirectory();
@@ -646,6 +627,15 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.println("Team Order: ");
                     myOutWriter.println("Comments: ");
 
+                    if(flankStart.isChecked()) {
+                        myOutWriter.println("Start Location: Flat");
+                    } else if(middleStart.isChecked()) {
+                        myOutWriter.println("Start Location: Middle");
+                    } else if(bumpStart.isChecked()) {
+                        myOutWriter.println("Start Location: Bump");
+                    }
+
+
 
                     myOutWriter.flush();
                     myOutWriter.close();
@@ -672,13 +662,15 @@ public class MainActivity extends AppCompatActivity {
             Blue_Alliance.performClick();
         }
 
+        runTimer();
+
 
 
     }
 
     private void teamAuto() {
 
-        if (teamAutofill.isChecked() && !Objects.equals(getTeams(), "")) {
+        if (teamAutofill.isChecked() && !Objects.equals(getTeams(), "") && !round_input.getText().toString().equals("")) {
             int tabletnumbercomp = tabletnumber - 1;
             String[] tempIntArr = null;
             String[] splittempIntArr = null;
@@ -701,7 +693,14 @@ public class MainActivity extends AppCompatActivity {
         autoTop = 0;
         autoMid = 0;
         autoLow = 0;
+        seconds = 0;
+        CountDown = false;
         teleTop = 0;
+        startLocation.setBackgroundColor(Color.TRANSPARENT);
+        bumpStart.setChecked(false);
+        middleStart.setChecked(false);
+        flankStart.setChecked(false);
+
         for (int[] ints : grid) {
             Arrays.fill(ints, 0);
         }
@@ -776,6 +775,55 @@ public class MainActivity extends AppCompatActivity {
         Log.e("log", text.toString());
         return text.toString();
     }
+    private void runTimer() {
+        ImageView[][] imArray =  {{cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5}, {cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11}, {both0, both1, both2, both3, both4, both5, both6, both7, both8}};
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(seconds >=60) {
+                    //changeMode
+                    if(mode.equals("auto")) {
+                        mode = "teleop";
+                        CountDown = false;
+                        submit.setVisibility(View.VISIBLE);
+                        endgameHide.setVisibility(View.VISIBLE);
+                        EndgameEngage.setVisibility(View.VISIBLE);
+                        AutoChange.setText("TELEOP");
+                        seconds = 0;
+                        for (int i = 0; i < grid.length; i++) {
+                            for (int j = 0; j < grid[i].length; j++) {
+                                if (grid[i][j] == 1) {
+                                    imArray[i][j].setEnabled(false);
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                if(seconds == 44|| seconds == 46 || seconds == 48  || seconds == 50 || seconds == 52 || seconds==54 || seconds == 56 || seconds == 58) {
+                    Background.setBackgroundColor(Color.YELLOW);
+                }
+
+                if(seconds == 45 || seconds == 47 || seconds == 49  || seconds == 51 || seconds == 53 || seconds==55 || seconds == 57 || seconds == 59) {
+                    if(alliance.equals("blue")) {
+                        Background.setBackgroundColor(Color.argb(127, 127, 127, 247));
+                    } else if(alliance.equals("red")) {
+                        Background.setBackgroundColor(Color.argb(127, 247, 127, 127));
+                    }
+                }
+
+
+
+                if (CountDown) {
+                    seconds = seconds + 1;
+                }
+
+                handler.postDelayed(this, 250);
+            }
+        });
+    }
 
     private void arrayUpdate(int row, int column, int id) {
         //Determine Cone Cube or Both
@@ -799,11 +847,14 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        if ((autoTop + autoMid + autoLow >= 4) && Objects.equals(mode, "auto")) {
+        if ((autoTop + autoMid + autoLow >= 2) && Objects.equals(mode, "auto")) {
             popup.setMessage("Are you supposed to be in Auto still?")
                     .setPositiveButton("Yes",AutoEnd)
                     .setNegativeButton("No",AutoEnd)
                     .show();
+        }
+        if(mode.equals("auto")) {
+            CountDown = true;
         }
 
         ImageView image = findViewById(id);

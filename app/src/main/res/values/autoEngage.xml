@@ -2,6 +2,7 @@
 <resources>
     <string-array name="autoEngage">
         <item>No Input</item>
+        <item>FAILED</item>
         <item>NONE</item>
         <item>DOCKED</item>
         <item>ENGAGED</item>

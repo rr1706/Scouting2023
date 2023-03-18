@@ -56,24 +56,33 @@ public class MainActivity extends AppCompatActivity {
     CheckBox defChkTeam1,defChkTeam2,defChkTeam3;
     private boolean T1running;
     private boolean T2running;
+    private boolean ScoreT1running;
+    private boolean ScoreT2running;
+
     int millisecondsT1 = 0;
     int millisecondsT2 = 0;
+    int ScoremillisecondsT1 = 0;
+    int ScoremillisecondsT2 = 0;
+
     int displayMillisT1 = 0;
     int displayMillisT2 = 0;
+    int ScoredisplayMillisT1 = 0;
+    int ScoredisplayMillisT2 = 0;
+
     List<Float> LoadT1 = new ArrayList<>();
     List<Float> LoadT2 = new ArrayList<>();
-
+    List<Float> ScoreT1 = new ArrayList<>();
+    List<Float> ScoreT2 = new ArrayList<>();
 
     String tabletName;
     int tabletnumber;
     String sameScouter;
     Spinner alliance_sel;
-    View line1,line2,line3,line4,line6,line7,line8,line10,line12;
+    View line1,line2,line3,line4,line6,line7,line8,line10,line12,line9;
     ToggleButton team1Op,team2Op,team3Op;
     EditText team1,team2,scouter,match,commentT1,commentT2;
-    TextView t1ArrayView,t2ArrayView,inputTeams,team1timer,team2timer,driverTxt2,playDefTxt2,LoadT1List,LoadT2List,scoreTxtT1,scoreTxtT2,team2Txt,team1Txt,playDefTxt,driverTxt;
-
-    Button undoLastT1,undoLastT2,startTimerT1,startTimerT2,quickScoreMinusT1,quickScorePlusT1,quickScoreMinusT2,quickScorePlusT2,submit;
+    TextView t1LoadArrayView,t2LoadArrayView,t1ScoreArrayView,t2ScoreArrayView,team1ScoreTimer, team2ScoreTimer,inputTeams,team1timer,team2timer,playDefTxt2,scoreTxtT1,scoreTxtT2,team2Txt,team1Txt,playDefTxt;
+    Button undoLastT1,undoLastT2,startTimerT1,startTimerT2,undoLastScoreT1,undoLastScoreT2,startTimerT1Score,startTimerT2Score,quickScoreMinusT1,quickScorePlusT1,quickScoreMinusT2,quickScorePlusT2,submit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         line6 = findViewById(R.id.line6);
         line7 = findViewById(R.id.line7);
         line8 = findViewById(R.id.line8);
+        line9 = findViewById(R.id.line9);
         line10 = findViewById(R.id.line10);
         line12 = findViewById(R.id.line12);
         View[] lines = {line1,line2,line3,line4,line6,line7,line8,line10,line12};
@@ -126,20 +136,19 @@ public class MainActivity extends AppCompatActivity {
         defSeekTeam2 = findViewById(R.id.team2DefSEEK);
 
         //TextView
-        t1ArrayView = findViewById(R.id.LoadT1List);
-        t2ArrayView = findViewById(R.id.LoadT2List);
+        t1LoadArrayView = findViewById(R.id.LoadT1List);
+        t2LoadArrayView = findViewById(R.id.LoadT2List);
         team1timer = findViewById(R.id.team1timer);
         team2timer = findViewById(R.id.team2timer);
-        driverTxt2  = findViewById(R.id.driverTxt2);
         playDefTxt2 = findViewById(R.id.playDefTxt2);
         inputTeams = findViewById(R.id.inputTeamsTxt);
-        scoreTxtT1 = findViewById(R.id.textTeam1Score);
-        scoreTxtT2 = findViewById(R.id.textTeam2Score);
-
+        team1ScoreTimer = findViewById(R.id.team1timerScore);
+        team2ScoreTimer = findViewById(R.id.team2timerScore);
+        t1ScoreArrayView = findViewById(R.id.scoreT1List);
+        t2ScoreArrayView = findViewById(R.id.ScoreT2List);
         team1Txt = findViewById(R.id.team1EditTxt);
         team2Txt = findViewById(R.id.team2EditTxt);
         playDefTxt = findViewById(R.id.playDefTxt);
-        driverTxt = findViewById(R.id.driverTxt);
 
         driverAbility1 = findViewById(R.id.driverAbility1);
         driverAbility2 = findViewById(R.id.driverAbility2);
@@ -151,10 +160,10 @@ public class MainActivity extends AppCompatActivity {
         startTimerT2 = findViewById(R.id.startTimerT2);
         submit = findViewById(R.id.submit);
         undoLastT2  = findViewById(R.id.undoLastT2);
-        quickScoreMinusT1 = findViewById(R.id.minusTeam1Score);
-        quickScorePlusT1 = findViewById(R.id.plusTeam1Score);
-        quickScoreMinusT2 = findViewById(R.id.minusTeam2Score);
-        quickScorePlusT2 = findViewById(R.id.plusTeam2Score);
+        undoLastScoreT1 = findViewById(R.id.undoLastScoreT1);
+        undoLastScoreT2 = findViewById(R.id.undoLastScoreT2);
+        startTimerT1Score = findViewById(R.id.startTimerScoreT1);
+        startTimerT2Score = findViewById(R.id.startTimerScoreT2);
 
 
         //EditText
@@ -166,6 +175,13 @@ public class MainActivity extends AppCompatActivity {
         commentT2 = findViewById(R.id.team2Notes);
 
         match.setText(String.valueOf(round));
+
+        driverAbility1.setProgress(2);
+        driverAbility2.setProgress(2);
+
+        Drawable textBackground = match.getBackground();
+        Drawable spinnerbackground = alliance_sel.getBackground();
+
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -208,15 +224,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        quickScorePlusT1.setOnClickListener(v-> modScore(scoreTxtT1,false));
-        quickScorePlusT2.setOnClickListener(v-> modScore(scoreTxtT2,false));
-        quickScoreMinusT1.setOnClickListener(v-> modScore(scoreTxtT1,true));
-        quickScoreMinusT2.setOnClickListener(v-> modScore(scoreTxtT2,true));
-
-
-
-
-
         team1Op.setOnClickListener(v -> populateTeams(team1Op));
         team2Op.setOnClickListener(v -> populateTeams(team2Op));
         team3Op.setOnClickListener(v -> populateTeams(team3Op));
@@ -224,11 +231,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         match.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
-
                 team1.setText("");
                 team2.setText("");
                 team1.setHint("Team 1");
@@ -246,8 +251,6 @@ public class MainActivity extends AppCompatActivity {
                 team1Op.setTextSize((float) 18);
                 team2Op.setTextSize((float) 18);
                 team3Op.setTextSize((float) 18);
-
-
                 autoFill();
 
             }
@@ -255,39 +258,59 @@ public class MainActivity extends AppCompatActivity {
         scouter.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+                scouter.setBackground(textBackground);
             }
         });
         commentT1.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+                commentT1.setBackground(textBackground);
+
             }
         });
         commentT2.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+                commentT2.setBackground(textBackground);
+
             }
         });
         team1.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+                team1.setBackground(textBackground);
+
                 if(!team1.getText().toString().equals("")) {
                     team1Txt.setText(team1.getText().toString());
                 } else {
                     team1Txt.setText("Team 1");
                 }
-                commentT1.setHint(team1.getText().toString()+" Notes");
+                if(team1.getText().toString().equals("")) {
+                    commentT1.setHint("Team 1 Notes");
+
+                } else {
+                    commentT1.setHint(team1.getText().toString()+" Notes");
+
+                }
             }
         });
         team2.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+                team2.setBackground(textBackground);
+
                 if(!team2.getText().toString().equals("")) {
                     team2Txt.setText(team2.getText().toString());
                 } else {
                     team2Txt.setText("Team 2");
                 }
+                if(team2.getText().toString().equals("")) {
+                    commentT2.setHint("Team 2 Notes");
 
-                commentT2.setHint(team2.getText().toString()+" Notes");
+                } else {
+                    commentT2.setHint(team2.getText().toString()+" Notes");
+
+                }
             }
         });
 
@@ -315,14 +338,6 @@ public class MainActivity extends AppCompatActivity {
             }
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
-        Drawable textBackground = match.getBackground();
-
-        Drawable spinnerbackground = alliance_sel.getBackground();
-
-
-
-
-
 
 
         submit.setOnClickListener(v->{
@@ -350,6 +365,14 @@ public class MainActivity extends AppCompatActivity {
             if (team2.getText().toString().equals("")) {
                 submitError += " No Team 2,";
                 team2.setBackgroundColor(Color.argb(255, 255, 255, 0));
+            }
+            if (commentT1.getText().toString().equals("")) {
+                submitError += " No Team 2,";
+                commentT1.setBackgroundColor(Color.argb(255, 255, 255, 0));
+            }
+            if (commentT2.getText().toString().equals("")) {
+                submitError += " No Team 2,";
+                commentT2.setBackgroundColor(Color.argb(255, 255, 255, 0));
             }
             if (scouter.getText().toString().equals("")) {
                 submitError += " No Name,";
@@ -411,14 +434,16 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // Score of Quickness Load
-                    myOutWriter.println("Quickness Load: " + t1ArrayView.getText().toString());
+                    myOutWriter.println("Quickness Load: " + t1LoadArrayView.getText().toString());
 
                     //Score of Quickness Score
-                    myOutWriter.println("Quickness Score: " + scoreTxtT1.getText().toString());
+                    myOutWriter.println("Quickness Score: " + t1ScoreArrayView.getText().toString());
 
                     myOutWriter.println("Team Order: " + driverAbility1.getProgress());
                     //Comments of Team
                     myOutWriter.println("Comments: " + commentT1.getText().toString());
+
+                    myOutWriter.println("Start Location: " );
 
                     myOutWriter.flush();
                     myOutWriter.close();
@@ -459,14 +484,15 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // Score of Quickness Load
-                    myOutWriter.println("Quickness Load: " + t2ArrayView.getText().toString());
+                    myOutWriter.println("Quickness Load: " + t2LoadArrayView.getText().toString());
 
                     //Score of Quickness Score
-                    myOutWriter.println("Quickness Score: " + scoreTxtT2.getText().toString());
+                    myOutWriter.println("Quickness Score: " + t2ScoreArrayView.getText().toString());
 
                     myOutWriter.println("Team Order: " + driverAbility2.getProgress());
                     //Comments of Team
                     myOutWriter.println("Comments: " + commentT2.getText().toString());
+                    myOutWriter.println("Start Location: " );
 
                     myOutWriter.flush();
                     myOutWriter.close();
@@ -484,6 +510,9 @@ public class MainActivity extends AppCompatActivity {
                 resetVars();
 
                 alliance_sel.setBackground(spinnerbackground);
+                commentT2.setBackground(textBackground);
+                commentT1.setBackground(textBackground);
+
                 scouter.setText(sameScouter);
                 autoFill();
 
@@ -497,7 +526,7 @@ public class MainActivity extends AppCompatActivity {
                 T1running = false;
                 startTimerT1.setText("Start");
                 LoadT1.add(Float.parseFloat(team1timer.getText().toString()));
-                t1ArrayView.setText(LoadT1.toString().replace("[","").replace("]",""));
+                t1LoadArrayView.setText(LoadT1.toString().replace("[","").replace("]",""));
                 millisecondsT1 = 0;
                 displayMillisT1 = 0;
 
@@ -512,7 +541,7 @@ public class MainActivity extends AppCompatActivity {
                 T2running = false;
                 startTimerT2.setText("Start");
                 LoadT2.add(Float.parseFloat(team2timer.getText().toString()));
-                t2ArrayView.setText(LoadT2.toString().replace("[","").replace("]",""));
+                t2LoadArrayView.setText(LoadT2.toString().replace("[","").replace("]",""));
                 millisecondsT2 = 0;
                 displayMillisT2 = 0;
 
@@ -523,28 +552,119 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         undoLastT1.setOnClickListener(v->{
-            int index = LoadT1.size() - 1;
-            try{
-                LoadT1.remove(index);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
+            if(T1running) {
+                T1running = false;
+                startTimerT1.setText("Start");
+                LoadT1.add(Float.parseFloat(team1timer.getText().toString()));
+                t1LoadArrayView.setText(LoadT1.toString().replace("[","").replace("]",""));
+                millisecondsT1 = 0;
+                displayMillisT1 = 0;
+            } else {
+                int index = LoadT1.size() - 1;
+                try {
+                    LoadT1.remove(index);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
             }
 
-            t1ArrayView.setText(LoadT1.toString().replace("[","").replace("]",""));
+            t1LoadArrayView.setText(LoadT1.toString().replace("[","").replace("]",""));
 
         });
         undoLastT2.setOnClickListener(v->{
-            int index = LoadT2.size() - 1;
-            try{
-                LoadT2.remove(index);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
+            if(T2running) {
+                T2running = false;
+                startTimerT2.setText("Start");
+                LoadT2.add(Float.parseFloat(team2timer.getText().toString()));
+                t2LoadArrayView.setText(LoadT2.toString().replace("[","").replace("]",""));
+                millisecondsT2 = 0;
+                displayMillisT2 = 0;
+            } else {
+                int index = LoadT2.size() - 1;
+                try {
+                    LoadT2.remove(index);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
             }
 
-            t2ArrayView.setText(LoadT2.toString().replace("[","").replace("]",""));
+            t2LoadArrayView.setText(LoadT2.toString().replace("[","").replace("]",""));
 
         });
+
+
+
+        startTimerT1Score.setOnClickListener(v->{
+            if(ScoreT1running) {
+                ScoreT1running = false;
+                startTimerT1Score.setText("Start");
+                ScoreT1.add(Float.parseFloat(team1ScoreTimer.getText().toString()));
+                t1ScoreArrayView.setText(ScoreT1.toString().replace("[","").replace("]",""));
+                ScoremillisecondsT1 = 0;
+                ScoredisplayMillisT1 = 0;
+            } else {
+                ScoreT1running = true;
+                startTimerT1Score.setText("Stop");
+            }
+        });
+
+        startTimerT2Score.setOnClickListener(v->{
+            if(ScoreT2running) {
+                ScoreT2running = false;
+                startTimerT2Score.setText("Start");
+                ScoreT2.add(Float.parseFloat(team2ScoreTimer.getText().toString()));
+                t2ScoreArrayView.setText(ScoreT2.toString().replace("[","").replace("]",""));
+                ScoremillisecondsT2 = 0;
+                ScoredisplayMillisT2 = 0;
+            } else {
+                ScoreT2running = true;
+                startTimerT2Score.setText("Stop");
+            }
+        });
+
+        undoLastScoreT1.setOnClickListener(v->{
+            if(ScoreT1running) {
+                ScoreT1running = false;
+                startTimerT1Score.setText("Start");
+                ScoreT1.add(Float.parseFloat(team1ScoreTimer.getText().toString()));
+                t1ScoreArrayView.setText(ScoreT1.toString().replace("[","").replace("]",""));
+                ScoremillisecondsT1 = 0;
+                ScoredisplayMillisT1 = 0;
+            } else {
+                int index = ScoreT1.size() - 1;
+                try {
+                    ScoreT1.remove(index);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            t1ScoreArrayView.setText(ScoreT1.toString().replace("[","").replace("]",""));
+
+        });
+        undoLastScoreT2.setOnClickListener(v->{
+            if(ScoreT2running) {
+                ScoreT2running = false;
+                startTimerT2Score.setText("Start");
+                ScoreT2.add(Float.parseFloat(team2ScoreTimer.getText().toString()));
+                t2ScoreArrayView.setText(ScoreT2.toString().replace("[","").replace("]",""));
+                ScoremillisecondsT2 = 0;
+                ScoredisplayMillisT2 = 0;
+            } else {
+                int index = ScoreT2.size() - 1;
+                try {
+                    ScoreT2.remove(index);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            t2ScoreArrayView.setText(ScoreT2.toString().replace("[","").replace("]",""));
+
+        });
+
         runTimer();
 
     }
@@ -574,17 +694,16 @@ public class MainActivity extends AppCompatActivity {
             if(button.isChecked()) {
                 button.setTextSize((float) 24.0);
 
-                if(team1Txt.getText().toString().equals("Team 1") && !team2Txt.getText().toString().equals(button.getText().toString())) {
+                if(team1.getText().toString().equals("") && !team2.getText().toString().equals(button.getText().toString())) {
 
                     team1Txt.setText(button.getText().toString());
                     team1.setText(button.getText().toString());
-                    team1.setEnabled(false);
+
                     commentT1.setHint(button.getText().toString()+" Notes");
 
-                } else if(team2Txt.getText().toString().equals("Team 2")) {
+                } else if(team2.getText().toString().equals("")) {
                     team2Txt.setText(button.getText().toString());
                     team2.setText(button.getText().toString());
-                    team2.setEnabled(false);
                     commentT2.setHint(button.getText().toString()+" Notes");
                 }
 
@@ -595,20 +714,19 @@ public class MainActivity extends AppCompatActivity {
                 if(team1Txt.getText().toString().equals(button.getText().toString())) {
                     team1.setHint("Team 1");
                     team1.setText("");
-                    team1.setEnabled(true);
 
                     commentT1.setHint("Team 1 Notes");
                 } else if(team2Txt.getText().toString().equals(button.getText().toString())) {
                     team2Txt.setText("Team 2");
                     team2.setHint("Team 2");
                     team2.setText("");
-                    team2.setEnabled(true);
                     commentT2.setHint("Team 2 Notes");
                 }
             }
     }
 
     private void resetVars() {
+        round = Integer.parseInt(match.getText().toString());
         team1.setEnabled(true);
         team2.setEnabled(true);
         scouter.setText("");
@@ -622,13 +740,15 @@ public class MainActivity extends AppCompatActivity {
         defSeekTeam1.setVisibility(View.INVISIBLE);
         defSeekTeam2.setVisibility(View.INVISIBLE);
         team1Txt.setText("Team 1");
-        LoadT2.clear();
-        LoadT1.clear();
         team2Txt.setText("Team 2");
+        LoadT1.clear();
+        LoadT2.clear();
         scoreTxtT1.setText("0");
         scoreTxtT2.setText("0");
-        t1ArrayView.setText("");
-        t2ArrayView.setText("");
+        t1LoadArrayView.setText("");
+        t2LoadArrayView.setText("");
+        t1ScoreArrayView.setText("");
+        t2ScoreArrayView.setText("");
         commentT1.setText("");
         commentT2.setText("");
         commentT1.setHint("Team 1 Notes");
@@ -642,22 +762,12 @@ public class MainActivity extends AppCompatActivity {
         team1Op.setTextSize((float) 18);
         team2Op.setTextSize((float) 18);
         team3Op.setTextSize((float) 18);
-        round += 1;
+        round ++;
         match.setText(String.valueOf(round));
-        driverAbility1.setProgress(0);
-        driverAbility2.setProgress(0);
+        driverAbility1.setProgress(2);
+        driverAbility2.setProgress(2);
 
-    }
 
-    private void modScore(TextView team,boolean minus) {
-
-        int Score = Integer.parseInt(team.getText().toString());
-        if(minus && Score > -99){
-            Score -= 1;
-        } else if(!minus && Score < 99) {
-            Score += 1;
-        }
-        team.setText(String.valueOf(Score));
     }
 
     private String getTeams() {
@@ -686,12 +796,10 @@ public class MainActivity extends AppCompatActivity {
             inputTeams.setTextColor(getResources().getColor(R.color.NewBlue));
             team1Txt.setTextColor(getResources().getColor(R.color.NewBlue));
 
-            driverTxt2.setTextColor(getResources().getColor(R.color.NewBlue));
             playDefTxt2.setTextColor(getResources().getColor(R.color.NewBlue));
             team2Txt.setTextColor(getResources().getColor(R.color.NewBlue));
             alliance_sel.setBackgroundColor(getResources().getColor(R.color.NewBlue));
             playDefTxt.setTextColor(getResources().getColor(R.color.NewBlue));
-            driverTxt.setTextColor(getResources().getColor(R.color.NewBlue));
             team1Op.setBackgroundColor(Color.BLUE);
             team2Op.setBackgroundColor(Color.BLUE);
             team3Op.setBackgroundColor(Color.BLUE);
@@ -701,13 +809,11 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (Objects.equals(color, "red")) {
             inputTeams.setTextColor(getResources().getColor(R.color.NewRed));
-            driverTxt2.setTextColor(getResources().getColor(R.color.NewRed));
             playDefTxt2.setTextColor(getResources().getColor(R.color.NewRed));
             team1Txt.setTextColor(getResources().getColor(R.color.NewRed));
             team2Txt.setTextColor(getResources().getColor(R.color.NewRed));
             alliance_sel.setBackgroundColor(getResources().getColor(R.color.NewRed));
             playDefTxt.setTextColor(getResources().getColor(R.color.NewRed));
-            driverTxt.setTextColor(getResources().getColor(R.color.NewRed));
             team1Op.setBackgroundColor(Color.RED);
             team2Op.setBackgroundColor(Color.RED);
             team3Op.setBackgroundColor(Color.RED);
@@ -725,14 +831,25 @@ public class MainActivity extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
+
+                int scoreSecsT1 = ScoremillisecondsT1 / 1000;
+                int scoreSecsT2 = ScoremillisecondsT2 / 1000;
+
                 int secsT1 = millisecondsT1 / 1000;
+
                 int secsT2 = millisecondsT2 / 1000;
 
                 String timeT1 = secsT1+"."+displayMillisT1;
                 String timeT2 = secsT2+"."+displayMillisT2;
 
+                String scoreTimeT1 = scoreSecsT1+"."+ScoredisplayMillisT1;
+                String scoreTimeT2 = scoreSecsT2+"."+ScoredisplayMillisT2;
+
                 team1timer.setText(timeT1);
                 team2timer.setText(timeT2);
+
+                team1ScoreTimer.setText(scoreTimeT1);
+                team2ScoreTimer.setText(scoreTimeT2);
 
                 if(displayMillisT1>=1000) {
                     displayMillisT1 = 0;
@@ -740,6 +857,14 @@ public class MainActivity extends AppCompatActivity {
                 if(displayMillisT2>=1000) {
                     displayMillisT2 = 0;
                 }
+
+                if(ScoredisplayMillisT1>=1000) {
+                    ScoredisplayMillisT1 = 0;
+                }
+                if(ScoredisplayMillisT2>=1000) {
+                    ScoredisplayMillisT2 = 0;
+                }
+
 
                 if (T1running) {
                     millisecondsT1 = millisecondsT1 + 16;
@@ -749,7 +874,14 @@ public class MainActivity extends AppCompatActivity {
                     millisecondsT2 = millisecondsT2 + 16;
                     displayMillisT2 = displayMillisT2 + 16;
                 }
-
+                if (ScoreT1running) {
+                    ScoremillisecondsT1 = ScoremillisecondsT1 + 16;
+                    ScoredisplayMillisT1 = ScoredisplayMillisT1 + 16;
+                }
+                if (ScoreT2running) {
+                    ScoremillisecondsT2 = ScoremillisecondsT2 + 16;
+                    ScoredisplayMillisT2 = ScoredisplayMillisT2 + 16;
+                }
 
                 handler.postDelayed(this, 1);
             }
@@ -761,9 +893,6 @@ public class MainActivity extends AppCompatActivity {
             team1Op.setVisibility(View.VISIBLE);
             team2Op.setVisibility(View.VISIBLE);
             team3Op.setVisibility(View.VISIBLE);
-            team1.setEnabled(false);
-            team2.setEnabled(false);
-
             String[] tempIntArr;
             String[] splittempIntArr;
             tempIntArr = getTeams().split("\n");
