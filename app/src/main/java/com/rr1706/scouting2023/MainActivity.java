@@ -742,6 +742,7 @@ public class MainActivity extends AppCompatActivity {
         AutoChange.setText("AUTO");
         submit.setVisibility(View.INVISIBLE);
         mode = "auto";
+        EndgameEngage.setVisibility(View.INVISIBLE);
         robotError.setChecked(false);
         playedDefense.setChecked(false);
         Pregame.setVisibility(View.VISIBLE);

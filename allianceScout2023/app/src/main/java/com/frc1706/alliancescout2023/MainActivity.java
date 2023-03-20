@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
     View line1,line2,line3,line4,line6,line7,line8,line10,line12,line9;
     ToggleButton team1Op,team2Op,team3Op;
     EditText team1,team2,scouter,match,commentT1,commentT2;
-    TextView t1LoadArrayView,t2LoadArrayView,t1ScoreArrayView,t2ScoreArrayView,team1ScoreTimer, team2ScoreTimer,inputTeams,team1timer,team2timer,playDefTxt2,scoreTxtT1,scoreTxtT2,team2Txt,team1Txt,playDefTxt;
-    Button undoLastT1,undoLastT2,startTimerT1,startTimerT2,undoLastScoreT1,undoLastScoreT2,startTimerT1Score,startTimerT2Score,quickScoreMinusT1,quickScorePlusT1,quickScoreMinusT2,quickScorePlusT2,submit;
+    TextView t1LoadArrayView,t2LoadArrayView,t1ScoreArrayView,t2ScoreArrayView,team1ScoreTimer, team2ScoreTimer,inputTeams,team1timer,team2timer,playDefTxt2,team2Txt,team1Txt,playDefTxt;
+    Button undoLastT1,undoLastT2,startTimerT1,startTimerT2,undoLastScoreT1,undoLastScoreT2,startTimerT1Score,startTimerT2Score,submit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -739,12 +739,17 @@ public class MainActivity extends AppCompatActivity {
         defSeekTeam2.setProgress(0);
         defSeekTeam1.setVisibility(View.INVISIBLE);
         defSeekTeam2.setVisibility(View.INVISIBLE);
-        team1Txt.setText("Team 1");
-        team2Txt.setText("Team 2");
+        try {
+
+            team1Txt.setText("Team 1");
+            team2Txt.setText("Team 2");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         LoadT1.clear();
         LoadT2.clear();
-        scoreTxtT1.setText("0");
-        scoreTxtT2.setText("0");
+        ScoreT1.clear();
+        ScoreT2.clear();
         t1LoadArrayView.setText("");
         t2LoadArrayView.setText("");
         t1ScoreArrayView.setText("");
