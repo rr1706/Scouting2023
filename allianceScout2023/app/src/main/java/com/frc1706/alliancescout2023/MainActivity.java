@@ -53,7 +53,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     int round = 1;
     SeekBar defSeekTeam1,defSeekTeam2,driverAbility1,driverAbility2;
-    CheckBox defChkTeam1,defChkTeam2,defChkTeam3;
+    CheckBox defChkTeam1,defChkTeam2;
     private boolean T1running;
     private boolean T2running;
     private boolean ScoreT1running;
@@ -895,46 +895,67 @@ public class MainActivity extends AppCompatActivity {
 
     private void autoFill() {
         if(!getTeams().equals("")) {
-            team1Op.setVisibility(View.VISIBLE);
-            team2Op.setVisibility(View.VISIBLE);
-            team3Op.setVisibility(View.VISIBLE);
-            String[] tempIntArr;
-            String[] splittempIntArr;
-            tempIntArr = getTeams().split("\n");
-            int arrayRound = Integer.parseInt(match.getText().toString()) - 1;
-            splittempIntArr = tempIntArr[arrayRound].split(",");
+            try {
+                team1Op.setVisibility(View.VISIBLE);
+                team2Op.setVisibility(View.VISIBLE);
+                team3Op.setVisibility(View.VISIBLE);
+                String[] tempIntArr;
+                String[] splittempIntArr;
+                tempIntArr = getTeams().split("\n");
+                int arrayRound = Integer.parseInt(match.getText().toString()) - 1;
+                splittempIntArr = tempIntArr[arrayRound].split(",");
 
-            if (alliance_sel.getSelectedItem().toString().equals("RED")) {
-                try {
-                    team1Op.setText(splittempIntArr[0]);
-                    team2Op.setText(splittempIntArr[1]);
-                    team3Op.setText(splittempIntArr[2]);
-                    team1Op.setTextOn(splittempIntArr[0]);
-                    team2Op.setTextOn(splittempIntArr[1]);
-                    team3Op.setTextOn(splittempIntArr[2]);
-                    team1Op.setTextOff(splittempIntArr[0]);
-                    team2Op.setTextOff(splittempIntArr[1]);
-                    team3Op.setTextOff(splittempIntArr[2]);
+                if (alliance_sel.getSelectedItem().toString().equals("RED")) {
+                    try {
+                        team1Op.setText(splittempIntArr[0]);
+                        team2Op.setText(splittempIntArr[1]);
+                        team3Op.setText(splittempIntArr[2]);
+                        team1Op.setTextOn(splittempIntArr[0]);
+                        team2Op.setTextOn(splittempIntArr[1]);
+                        team3Op.setTextOn(splittempIntArr[2]);
+                        team1Op.setTextOff(splittempIntArr[0]);
+                        team2Op.setTextOff(splittempIntArr[1]);
+                        team3Op.setTextOff(splittempIntArr[2]);
+                        if (team1Op.getText().equals("")) {
+                            team1Op.setVisibility(View.INVISIBLE);
+                        }
+                        if (team2Op.getText().equals("")) {
+                            team2Op.setVisibility(View.INVISIBLE);
+                        }
+                        if (team3Op.getText().equals("")) {
+                            team3Op.setVisibility(View.INVISIBLE);
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
 
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
+
+                } else if (alliance_sel.getSelectedItem().toString().equals("BLUE")) {
+                    try {
+                        team1Op.setText(splittempIntArr[3]);
+                        team2Op.setText(splittempIntArr[4]);
+                        team3Op.setText(splittempIntArr[5]);
+                        team1Op.setTextOn(splittempIntArr[3]);
+                        team2Op.setTextOn(splittempIntArr[4]);
+                        team3Op.setTextOn(splittempIntArr[5]);
+                        team1Op.setTextOff(splittempIntArr[3]);
+                        team2Op.setTextOff(splittempIntArr[4]);
+                        team3Op.setTextOff(splittempIntArr[5]);
+                        if (team1Op.getText().equals("")) {
+                            team1Op.setVisibility(View.INVISIBLE);
+                        }
+                        if (team2Op.getText().equals("")) {
+                            team2Op.setVisibility(View.INVISIBLE);
+                        }
+                        if (team3Op.getText().equals("")) {
+                            team3Op.setVisibility(View.INVISIBLE);
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-
-            } else if (alliance_sel.getSelectedItem().toString().equals("BLUE")) {
-                try {
-                    team1Op.setText(splittempIntArr[3]);
-                    team2Op.setText(splittempIntArr[4]);
-                    team3Op.setText(splittempIntArr[5]);
-                    team1Op.setTextOn(splittempIntArr[3]);
-                    team2Op.setTextOn(splittempIntArr[4]);
-                    team3Op.setTextOn(splittempIntArr[5]);
-                    team1Op.setTextOff(splittempIntArr[3]);
-                    team2Op.setTextOff(splittempIntArr[4]);
-                    team3Op.setTextOff(splittempIntArr[5]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
             }
         }
 
