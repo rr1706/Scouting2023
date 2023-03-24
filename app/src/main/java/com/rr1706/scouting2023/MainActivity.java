@@ -192,6 +192,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Change From Auto To Teleop - Needs to disable the clicked ones in Auto when transitioning - Needs to reenable disabled if switch back to auto
         AutoChange.setOnClickListener(v->{
+            if(alliance.equals("red")) {
+                Background.setBackgroundColor(Color.argb(127, 247, 127, 127));
+            } else if(alliance.equals("blue")) {
+                Background.setBackgroundColor(Color.argb(127, 127, 127, 247));
+            }
             Log.e("VALUES:||", autoTop+","+autoMid+","+autoLow+","+teleTop+","+teleMid+","+teleLow);
             if(mode.equals("auto")) {
                 mode = "teleop";
@@ -540,6 +545,11 @@ public class MainActivity extends AppCompatActivity {
                 name_input.setBackgroundColor(Color.argb(255, 255, 255, 0));
                 Pregame.setVisibility(View.VISIBLE);
             }
+            if (startLocation.getCheckedRadioButtonId() == -1) {
+                submitError += " No Start Location,";
+                startLocation.setBackgroundColor(Color.argb(255, 255, 255, 0));
+                Pregame.setVisibility(View.VISIBLE);
+            }
             if (round_input.getText().toString().equals("420")) {
                 submitError += " No. Its not even funny,";
                 round_input.setBackgroundColor(Color.argb(255, 255, 255, 0));
@@ -582,6 +592,7 @@ public class MainActivity extends AppCompatActivity {
                 team_input.setBackground(textBackground);
                 round_input.setBackground(textBackground);
                 name_input.setBackground(nameBackground);
+                startLocation.setBackgroundColor(Color.TRANSPARENT);
                 allianceText.setBackgroundColor(Color.TRANSPARENT);
                 AutoEngage.setBackground(spinnerbackground);
                 EndgameEngage.setBackground(spinnerbackground);
@@ -802,16 +813,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                if(mode.equals("auto")) {
+                    if (seconds == 44 || seconds == 46 || seconds == 48 || seconds == 50 || seconds == 52 || seconds == 54 || seconds == 56 || seconds == 58) {
+                        Background.setBackgroundColor(Color.YELLOW);
+                    }
 
-                if(seconds == 44|| seconds == 46 || seconds == 48  || seconds == 50 || seconds == 52 || seconds==54 || seconds == 56 || seconds == 58) {
-                    Background.setBackgroundColor(Color.YELLOW);
-                }
-
-                if(seconds == 45 || seconds == 47 || seconds == 49  || seconds == 51 || seconds == 53 || seconds==55 || seconds == 57 || seconds == 59) {
-                    if(alliance.equals("blue")) {
-                        Background.setBackgroundColor(Color.argb(127, 127, 127, 247));
-                    } else if(alliance.equals("red")) {
-                        Background.setBackgroundColor(Color.argb(127, 247, 127, 127));
+                    if (seconds == 45 || seconds == 47 || seconds == 49 || seconds == 51 || seconds == 53 || seconds == 55 || seconds == 57 || seconds == 59) {
+                        if (alliance.equals("blue")) {
+                            Background.setBackgroundColor(Color.argb(127, 127, 127, 247));
+                        } else if (alliance.equals("red")) {
+                            Background.setBackgroundColor(Color.argb(127, 247, 127, 127));
+                        }
                     }
                 }
 
