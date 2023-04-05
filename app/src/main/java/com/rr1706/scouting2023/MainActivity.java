@@ -56,8 +56,7 @@ public class MainActivity extends AppCompatActivity {
     TextView allianceText,dummyTeam,endgameHide;
     Switch robotError;
     RadioGroup startLocation;
-    RadioButton bumpStart,middleStart,flankStart;
-
+    RadioButton radioButton;
     int teleTop;
     int teleMid;
     int teleLow;
@@ -150,9 +149,6 @@ public class MainActivity extends AppCompatActivity {
         both8 = findViewById(R.id.both8);
 
         startLocation = findViewById(R.id.startLocation);
-        bumpStart = findViewById(R.id.bumpStart);
-        middleStart = findViewById(R.id.middleStart);
-        flankStart = findViewById(R.id.flankStart);
 
         ImageView[][] imArray = {{cone0, cube0, cone1, cone2, cube1, cone3, cone4, cube2, cone5},{cone6, cube3, cone7, cone8, cube4, cone9, cone10, cube5, cone11},{both0,both1,both2,both3,both4,both5,both6,both7,both8}};
 
@@ -523,6 +519,8 @@ public class MainActivity extends AppCompatActivity {
             SimpleDateFormat time = new SimpleDateFormat("dd-HHmmss", Locale.getDefault());
             int team;
             int round;
+            int selectedId = startLocation.getCheckedRadioButtonId();
+            radioButton = (RadioButton) findViewById(selectedId);
             //Special handling
             if (team_input.getText().toString().equals("")) {
                 team = -1;
@@ -545,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
                 name_input.setBackgroundColor(Color.argb(255, 255, 255, 0));
                 Pregame.setVisibility(View.VISIBLE);
             }
-            if (startLocation.getCheckedRadioButtonId() == -1) {
+            if (radioButton.getText().toString().equals("")) {
                 submitError += " No Start Location,";
                 startLocation.setBackgroundColor(Color.argb(255, 255, 255, 0));
                 Pregame.setVisibility(View.VISIBLE);
@@ -638,15 +636,7 @@ public class MainActivity extends AppCompatActivity {
                     myOutWriter.println("Team Order: ");
                     myOutWriter.println("Comments: ");
 
-                    if(flankStart.isChecked()) {
-                        myOutWriter.println("Start Location: Flat");
-                    } else if(middleStart.isChecked()) {
-                        myOutWriter.println("Start Location: Middle");
-                    } else if(bumpStart.isChecked()) {
-                        myOutWriter.println("Start Location: Bump");
-                    }
-
-
+                    myOutWriter.println("Start Location: "+radioButton.getText().toString());
 
                     myOutWriter.flush();
                     myOutWriter.close();
@@ -708,9 +698,7 @@ public class MainActivity extends AppCompatActivity {
         CountDown = false;
         teleTop = 0;
         startLocation.setBackgroundColor(Color.TRANSPARENT);
-        bumpStart.setChecked(false);
-        middleStart.setChecked(false);
-        flankStart.setChecked(false);
+        startLocation.clearCheck();
 
         for (int[] ints : grid) {
             Arrays.fill(ints, 0);
@@ -814,11 +802,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(mode.equals("auto")) {
-                    if (seconds == 44 || seconds == 46 || seconds == 48 || seconds == 50 || seconds == 52 || seconds == 54 || seconds == 56 || seconds == 58) {
+                    if (seconds >= 48 && seconds % 2 == 0) {
                         Background.setBackgroundColor(Color.YELLOW);
                     }
 
-                    if (seconds == 45 || seconds == 47 || seconds == 49 || seconds == 51 || seconds == 53 || seconds == 55 || seconds == 57 || seconds == 59) {
+                    if (seconds >= 48 && seconds % 2 == 1) {
                         if (alliance.equals("blue")) {
                             Background.setBackgroundColor(Color.argb(127, 127, 127, 247));
                         } else if (alliance.equals("red")) {
